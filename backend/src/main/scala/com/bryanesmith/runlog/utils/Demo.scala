@@ -13,6 +13,19 @@ object Demo {
       date = "2019-03-05",
       runData = Some(
         SteadyStateRun(
+          category = SteadyStateRunCategory.Distance,
+          distance = Some(26.2),
+          duration = Some("PT4H22M10S")
+        )
+      ),
+      notes = Some("My first marathon! Rock n' Roll DC.")
+    ),
+    Event(
+      atId = "_:263",
+      atType = Type.Run,
+      date = "2019-03-05",
+      runData = Some(
+        SteadyStateRun(
           category = SteadyStateRunCategory.Casual,
           distance = Some(7.7)
         )
