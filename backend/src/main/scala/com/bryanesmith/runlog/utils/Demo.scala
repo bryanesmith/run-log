@@ -10,7 +10,7 @@ object Demo {
     Event(
       atId = "_:269",
       atType = Type.CrossTrain,
-      date = "2018-04-04",
+      date = "2019-04-04",
       notes = Some("Bench, squat, DL")
     ),
     Event(
