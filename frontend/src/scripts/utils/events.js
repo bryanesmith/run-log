@@ -1,5 +1,6 @@
 import { durationToSeconds, subtractMoment } from './dates';
 import { add } from './math';
+import moment from 'moment';
 
 /**
  * Returns distance for event, defaulting to zero if none specified.
@@ -66,11 +67,11 @@ export function averagePace(events) {
 }
 
 /**
- *
+ * Given some events, filters by types as well as within specified time from end date.
+ *    Units can be "Day", "Month", "Year".
  */
-export function filterEventsByEndDate(events, eventTypes, endDate, units, length) {
+export function filterEventsByEndDate(events, endDate, units, length) {
   const startDate = subtractMoment(endDate, units, length);
   return events
-    .filter(e => eventTypes.includes(e['@type']))
-    .filter(e => e.date.isBetween(startDate, endDate));
+    .filter(e => moment(e.date).isBetween(startDate, endDate));
 }

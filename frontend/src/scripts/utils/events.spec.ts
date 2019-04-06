@@ -1,4 +1,5 @@
-import { averagePace, distance, pace, seconds, totalDistance } from './events';
+import { averagePace, distance, filterEventsByEndDate, pace, seconds, totalDistance } from './events';
+import moment from 'moment';
 
 const nonRun = {};
 const steadyRun = {run: {distance: 6, duration: "PT1H"}};
@@ -88,4 +89,58 @@ test('averagePace for steady runs with and without duration', () => {
     {run: {distance: 6, duration: null}},
   ];
   expect(averagePace(events)).toBe(600); // 10 min
+});
+
+test('filterEventsByEndDate for no events', () => {
+  const found = filterEventsByEndDate([], moment('2019-04-03'), 'Day', 1);
+  expect(found).toEqual([]);
+});
+
+test('filterEventsByEndDate for just one event, doesn\'t match', () => {
+  const events = [
+    { date: "2019-04-01T09:00:00" }
+  ];
+  const found = filterEventsByEndDate(events, moment('2019-04-03'), 'Day', 1);
+  expect(found).toEqual([]);
+});
+
+test('filterEventsByEndDate for just one event, matches', () => {
+  const events = [
+    { date: "2019-04-02T09:00:00" }
+  ];
+  const found = filterEventsByEndDate(events, moment('2019-04-03'), 'Day', 1);
+  expect(found).toEqual(events);
+});
+
+test('filterEventsByEndDate for multiple events, no matches', () => {
+  const events = [
+    { date: "2019-03-21T09:00:00" },
+    { date: "2019-03-30T09:00:00" },
+    { date: "2019-04-01T09:00:00" }
+  ];
+  const found = filterEventsByEndDate(events, moment('2019-04-03'), 'Day', 1);
+  expect(found).toEqual([]);
+});
+
+test('filterEventsByEndDate for multiple events, some matches', () => {
+  const expected = [
+    { date: "2019-03-31T09:00:00" },
+    { date: "2019-04-02T09:00:00" }
+  ];
+  const events = [
+    { date: "2019-03-21T09:00:00" },
+    ...expected
+  ];
+  const found = filterEventsByEndDate(events, moment('2019-04-03'), 'Day', 3);
+  expect(found).toEqual(expected);
+});
+
+test('filterEventsByEndDate for multiple events, all matches', () => {
+  const events = [
+    { date: "2019-03-31T09:00:00" },
+    { date: "2019-04-01T09:00:00" },
+    { date: "2019-04-02T09:00:00" }
+  ];
+  const found = filterEventsByEndDate(events, moment('2019-04-03'), 'Day', 3);
+  expect(found).toEqual(events);
 });

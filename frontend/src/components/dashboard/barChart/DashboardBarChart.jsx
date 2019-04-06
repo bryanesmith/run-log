@@ -43,11 +43,6 @@ function generateSeriesOfMoments(length, units, duration, endDate) {
  */
 function barChartData(events, xLabelFn, barOpts) {
 
-  // normalize dates
-  const filteredEvents = events.map(e =>
-    Object.assign({}, e, { date: moment(e.date) })
-  );
-
   // fetch the ending moment for every bar
   const dates = generateSeriesOfMoments(
     barOpts.count,
@@ -57,20 +52,22 @@ function barChartData(events, xLabelFn, barOpts) {
   );
 
   // Partition all run events into a bucket per bar
-  const runs = dates.map(endDate => {
-    const s = filterEventsByEndDate(filteredEvents, ['Run','Run+CrossTrain'], endDate, barOpts.units, barOpts.length);
-    return totalDistance(s);
+  const runSeries = dates.map(endDate => {
+    const runs = events.filter(e => ['Run','Run+CrossTrain'].includes(e['@type']));
+    const filtered = filterEventsByEndDate(runs, endDate, barOpts.units, barOpts.length);
+    return totalDistance(filtered);
   });
 
   // Find maximum run distance
-  const maxDistance = Math.max(...runs);
+  const maxDistance = Math.max(...runSeries);
 
   // Partition all cross-training events into a bucket per bar
   //   Note that the height of these bars will always be half of maximum run height
-  const crossTrainingEvents = dates.map(endDate => {
-    const s = filterEventsByEndDate(filteredEvents, ['CrossTrain'], endDate, barOpts.units, barOpts.length);
+  const crossTrainingSeries = dates.map(endDate => {
+    const crossTrains = events.filter(e => e['@type'] === 'CrossTrain');
+    const filtered = filterEventsByEndDate(crossTrains, endDate, barOpts.units, barOpts.length);
 
-    if (s.length > 0) {
+    if (filtered.length > 0) {
       // If no runs, any height will do, so use 1
       return isNaN(maxDistance) ? 1 : maxDistance / 2;
     } else {
@@ -80,7 +77,7 @@ function barChartData(events, xLabelFn, barOpts) {
 
   return {
     labels: dates.map(xLabelFn),
-    series: [runs, crossTrainingEvents],
+    series: [runSeries, crossTrainingSeries],
   };
 }
 
