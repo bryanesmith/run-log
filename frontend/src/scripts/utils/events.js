@@ -1,4 +1,4 @@
-import { durationToSeconds } from './dates';
+import { durationToSeconds, subtractMoment } from './dates';
 import { add } from './math';
 
 /**
@@ -63,4 +63,14 @@ export function averagePace(events) {
   } else {
     return undefined;
   }
+}
+
+/**
+ *
+ */
+export function filterEventsByEndDate(events, eventTypes, endDate, units, length) {
+  const startDate = subtractMoment(endDate, units, length);
+  return events
+    .filter(e => eventTypes.includes(e['@type']))
+    .filter(e => e.date.isBetween(startDate, endDate));
 }

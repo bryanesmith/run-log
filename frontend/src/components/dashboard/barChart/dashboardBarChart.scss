@@ -13,10 +13,14 @@
   }
 
   .ct-bar {
-    stroke-width: 1.5em;
+    stroke-width: 1.25em;
   }
-  
+
   .ct-series-a .ct-bar {
     stroke: $my-purple-color;
+  }
+
+  .ct-series-b .ct-bar {
+    stroke: $my-green-color;
   }
 }

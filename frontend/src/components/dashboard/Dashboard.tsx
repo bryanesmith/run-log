@@ -55,10 +55,7 @@ class Dashboard extends React.Component<{} & IStateToProps, {}> {
             <div className="dashboard-bar-chart">
               <DashboardBarChart
                 selectedTab={this.props.dashboard.ui.selectedTab}
-                events={this.filterByTypes(selectedEvents, [
-                  'Run',
-                  'Run+CrossTrain',
-                ])}
+                events={selectedEvents}
               />
             </div>
           </div>
