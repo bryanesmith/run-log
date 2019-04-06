@@ -53,6 +53,10 @@ test('seconds for intervals', () => {
   expect(seconds(intervals)).toBe(360);
 });
 
+test('averagePace for no events', () => {
+  expect(averagePace([])).toBeUndefined();
+});
+
 test('averagePace for several types of events', () => {
   const events = [
     nonRun,
@@ -60,4 +64,28 @@ test('averagePace for several types of events', () => {
     intervals
   ];
   expect(averagePace(events)).toBe(565.7142857142857);
+});
+
+test('averagePace for single steady runs with duration', () => {
+  const events = [
+    {run: {distance: 6, duration: "PT1H"}}
+  ];
+  expect(averagePace(events)).toBe(600); // 10 min
+});
+
+test('averagePace for single steady runs without duration', () => {
+  const events = [
+    {run: {distance: 6, duration: null}}
+  ];
+  expect(averagePace(events)).toBeUndefined();
+});
+
+test('averagePace for steady runs with and without duration', () => {
+  const events = [
+    {run: {distance: 6, duration: "PT1H"}},
+    {run: {distance: 6, duration: null}},
+    {run: {distance: 6, duration: "PT1H"}},
+    {run: {distance: 6, duration: null}},
+  ];
+  expect(averagePace(events)).toBe(600); // 10 min
 });

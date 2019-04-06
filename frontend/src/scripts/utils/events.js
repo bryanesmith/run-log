@@ -18,11 +18,17 @@ export function distance(event) {
 }
 
 /**
- * Returns combined distance for events, defaulting to zero for events without
- *   distances specified.
+ * Returns the seconds for an event.
  */
-export function totalDistance(events) {
-  return events.map(distance).reduce(add, 0);
+export function seconds(event) {
+  if (event.run && event.run.duration) {
+    return durationToSeconds(event.run.duration);
+  } else if (event.run && event.run.count && event.run.intervalDuration) {
+    const secs = durationToSeconds(event.run.intervalDuration);
+    return event.run.count * secs;
+  } else {
+    return 0;
+  }
 }
 
 /**
@@ -38,23 +44,23 @@ export function pace(event) {
   }
 }
 
+
 /**
- * Returns the seconds for an event.
+ * Returns combined distance for events, defaulting to zero for events without
+ *   distances specified.
  */
-export function seconds(event) {
-  if (event.run && event.run.duration) {
-    return durationToSeconds(event.run.duration);
-  } else if (event.run && event.run.count && event.run.intervalDuration) {
-    const secs = durationToSeconds(event.run.intervalDuration);
-    return event.run.count * secs;
-  } else {
-    return 0;
-  }
+export function totalDistance(events) {
+  return events.map(distance).reduce(add, 0);
 }
 
 /**
- * Returns the average pace for a bunch of events.
+ * Returns the average pace for a bunch of events. (seconds per mile)
  */
 export function averagePace(events) {
-  return events.map(seconds).reduce(add, 0) / totalDistance(events);
+  var filtered = events.filter(e => pace(e) > 0);
+  if (filtered.length > 0) {
+    return filtered.map(seconds).reduce(add, 0) / totalDistance(filtered);
+  } else {
+    return undefined;
+  }
 }
