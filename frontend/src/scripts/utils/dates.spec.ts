@@ -2,6 +2,7 @@ import {
   addMoment,
   durationToSeconds,
   durationToComponents,
+  generateMomentsUntil,
   subtractMoment,
   toDuration
 } from './dates';
@@ -123,4 +124,40 @@ test('addMoment for 0', () => {
   expect(addMoment(startDate, 'Day', 0).format('YYYY-MM-DD')).toBe('2018-07-15');
   expect(addMoment(startDate, 'Month', 0).format('YYYY-MM-DD')).toBe('2018-07-15');
   expect(addMoment(startDate, 'Year', 0).format('YYYY-MM-DD')).toBe('2018-07-15');
+});
+
+test('generateMomentsUntil for Day', () => {
+  const moments = generateMomentsUntil(3, 'Day', 2, moment('2019-03-31T09:00:00'))
+    .map(e => e.format('YYYY-MM-DD hh:mm:ss'));
+
+  const expected = [
+    "2019-03-27 09:00:00",
+    "2019-03-29 09:00:00",
+    "2019-03-31 09:00:00"
+  ];
+  expect(expected).toEqual(moments);
+});
+
+test('generateMomentsUntil for Month', () => {
+  const moments = generateMomentsUntil(3, 'Month', 2, moment('2019-03-31'))
+    .map(e => e.format('YYYY-MM-DD'));
+
+  const expected = [
+    "2018-12-01",
+    "2019-02-01",
+    "2019-04-01"
+  ];
+  expect(expected).toEqual(moments);
+});
+
+test('generateMomentsUntil for Year', () => {
+  const moments = generateMomentsUntil(3, 'Year', 3, moment('2019-03-31'))
+    .map(e => e.format('YYYY-MM-DD'));
+
+  const expected = [
+    "2014-01-01",
+    "2017-01-01",
+    "2020-01-01"
+  ];
+  expect(expected).toEqual(moments);
 });

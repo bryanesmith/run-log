@@ -11,32 +11,8 @@ import {
   TAB_365_DAY,
   TAB_ALL,
 } from 'run-log/components/dashboard/actions';
-import { addMoment, subtractMoment } from 'run-log/scripts/utils/dates';
+import { generateMomentsUntil } from 'run-log/scripts/utils/dates';
 import { filterEventsByEndDate, totalDistance } from 'run-log/scripts/utils/events.js';
-
-/*
- * Returns a series of moments ending in now with specified
- *   length and durations.
- *
- * E.g., length = 5, units = 'Days', duration = 2,
- *   returns [10, 8, 6, 4, 2, 0].map(d => moment().subtract({days: d}))
- */
-function generateSeriesOfMoments(length, units, duration, endDate) {
-  const dates = [];
-
-  // If not measuring days, the end should be the end of the calendar month
-  //   or year....
-  if (['Month', 'Year'].includes(units)) {
-    endDate = addMoment(endDate.startOf(units), units, 1);
-  }
-
-  for (let i = length - 1; i >= 0; i--) {
-    const date = subtractMoment(endDate, units, i * duration);
-    dates.push(date);
-  }
-
-  return dates;
-}
 
 /*
  * Generates data for bar chart.
@@ -44,7 +20,7 @@ function generateSeriesOfMoments(length, units, duration, endDate) {
 function barChartData(events, xLabelFn, barOpts) {
 
   // fetch the ending moment for every bar
-  const dates = generateSeriesOfMoments(
+  const dates = generateMomentsUntil(
     barOpts.count,
     barOpts.units,
     barOpts.length,

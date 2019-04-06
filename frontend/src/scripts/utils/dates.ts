@@ -91,3 +91,27 @@ export function addMoment(fromMoment: any, units: string, duration: number) {
   const args = momentMathArgs(units, duration);
   return fromMoment.clone().add(args);
 }
+
+/*
+ * Returns a series of moments ending in now with specified
+ *   length and durations.
+ *
+ * E.g., length = 5, units = 'Day', duration = 2,
+ *   returns [8, 6, 4, 2, 0].map(d => moment().subtract({days: d}))
+ */
+export function generateMomentsUntil(length: number, units: string, duration: number, endDate: any) {
+  const dates = [];
+
+  // If not measuring days, the end should be the end of the calendar month
+  //   or year....
+  if (['Month', 'Year'].includes(units)) {
+    endDate = addMoment(endDate.startOf(units), units, 1);
+  }
+
+  for (let i = length - 1; i >= 0; i--) {
+    const date = subtractMoment(endDate, units, i * duration);
+    dates.push(date);
+  }
+
+  return dates;
+}
