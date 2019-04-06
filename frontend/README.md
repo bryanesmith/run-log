@@ -19,7 +19,7 @@ E.g., when developing, to request api calls from separate backend instance runni
 
 Note: do not include a trailing slash.
 
-But in production, when you are running both backend and frontend in same instance, then:
+But in production, when you are running both backend and frontend on the same host and port, then:
 
 ```json
 {
