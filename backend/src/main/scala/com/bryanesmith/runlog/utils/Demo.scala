@@ -7,6 +7,19 @@ import com.bryanesmith.runlog.dto.SteadyState._
 object Demo {
 
   def events = Seq(
+    // 1:20:58 - 7:08 = 1:13:50
+    Event(
+      atId = "_:270",
+      atType = Type.Run,
+      date = "2019-04-07",
+      runData = Some(
+        SteadyStateRun(
+          category = SteadyStateRunCategory.Casual,
+          distance = Some(8.56),
+          duration = Some("PT1H13M50S")
+        )
+      )
+    ),
     Event(
       atId = "_:269",
       atType = Type.CrossTrain,
