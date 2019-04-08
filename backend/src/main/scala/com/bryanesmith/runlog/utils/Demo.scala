@@ -9,7 +9,7 @@ object Demo {
   def events = Seq(
     // 1:20:58 - 7:08 = 1:13:50
     Event(
-      atId = "_:270",
+      atId = "_:271",
       atType = Type.Run,
       date = "2019-04-07",
       runData = Some(
@@ -19,6 +19,11 @@ object Demo {
           duration = Some("PT1H13M50S")
         )
       )
+    ),
+    Event(
+      atId = "_:270",
+      atType = Type.ChangeShoes,
+      date = "2019-04-07"
     ),
     Event(
       atId = "_:269",
