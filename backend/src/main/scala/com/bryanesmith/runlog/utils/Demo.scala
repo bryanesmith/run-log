@@ -7,7 +7,6 @@ import com.bryanesmith.runlog.dto.SteadyState._
 object Demo {
 
   def events = Seq(
-    // 1:20:58 - 7:08 = 1:13:50
     Event(
       atId = "_:271",
       atType = Type.Run,
@@ -23,7 +22,8 @@ object Demo {
     Event(
       atId = "_:270",
       atType = Type.ChangeShoes,
-      date = "2019-04-07"
+      date = "2019-04-07",
+      notes = Some("Also wore shoes once before during marathon")
     ),
     Event(
       atId = "_:269",
