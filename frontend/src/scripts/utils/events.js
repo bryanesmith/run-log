@@ -67,6 +67,14 @@ export function averagePace(events) {
 }
 
 /**
+ * Returns average mph.
+ */
+export function averageMPH(events) {
+  const avgPace = averagePace(events);
+  return (typeof avgPace  !== 'undefined') ? (3600 / avgPace) : undefined;
+}
+
+/**
  * Given some events, filters by types as well as within specified time from end date.
  *    Units can be "Day", "Month", "Year".
  */

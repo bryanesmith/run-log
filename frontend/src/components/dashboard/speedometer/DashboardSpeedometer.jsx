@@ -3,8 +3,8 @@ import React from 'react';
 import ChartistGraph from 'react-chartist';
 /*eslint-enable no-unused-vars*/
 
-import { durationToSeconds } from 'run-log/scripts/utils/dates';
-import { add, min } from 'run-log/scripts/utils/math';
+import { averageMPH } from 'run-log/scripts/utils/events';
+import { min } from 'run-log/scripts/utils/math';
 
 function options() {
   return {
@@ -19,14 +19,6 @@ function options() {
 
 const GoalMPH = 10.0;
 
-function calcMph(events) {
-  const speeds = events.filter(e => e.run && e.run.distance && e.run.duration);
-  const miles = speeds.map(e => e.run.distance).reduce(add, 0);
-  const hours =
-    speeds.map(e => durationToSeconds(e.run.duration)).reduce(add, 0) / 3600;
-  return hours ? miles / hours : 0;
-}
-
 function data(mph) {
   const cappedMph = min(mph, GoalMPH);
   const percentage = 100 * cappedMph / GoalMPH;
@@ -36,7 +28,8 @@ function data(mph) {
 }
 
 export default props => {
-  const mph = calcMph(props.events);
+  const mphUndef = averageMPH(props.events);
+  const mph = mphUndef !== 'undefined' ? mphUndef : 0;
   return (
     <div className="dashboard-speedometer widget-stat-imposter col-xs-4">
       <div className="speed-achieved">{mph.toFixed(2)} mph</div>

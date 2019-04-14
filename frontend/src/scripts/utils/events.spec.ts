@@ -1,4 +1,4 @@
-import { averagePace, distance, filterEventsByEndDate, pace, seconds, totalDistance } from './events';
+import { averageMPH, averagePace, distance, filterEventsByEndDate, pace, seconds, totalDistance } from './events';
 import moment from 'moment';
 
 const nonRun = {};
@@ -54,6 +54,31 @@ test('seconds for intervals', () => {
   expect(seconds(intervals)).toBe(360);
 });
 
+test('averageMPH for no events', () => {
+  expect(averageMPH([])).toBeUndefined();
+});
+
+test('averageMPH for non-run event', () => {
+  expect(averageMPH([nonRun])).toBeUndefined();
+});
+
+test('averageMPH for steady run event', () => {
+  expect(averageMPH([steadyRun])).toBe(6.0);
+});
+
+test('averageMPH for interval run event', () => {
+  expect(averageMPH([intervals])).toBe(10.0);
+});
+
+test('averageMPH for heterogeneous events', () => {
+  const events = [
+    nonRun,
+    steadyRun,
+    intervals
+  ];
+  expect(averageMPH(events).toFixed(2)).toBe("6.36");
+});
+
 test('averagePace for no events', () => {
   expect(averagePace([])).toBeUndefined();
 });
@@ -64,7 +89,7 @@ test('averagePace for several types of events', () => {
     steadyRun,
     intervals
   ];
-  expect(averagePace(events)).toBe(565.7142857142857);
+  expect(averagePace(events).toFixed(2)).toBe("565.71");
 });
 
 test('averagePace for single steady runs with duration', () => {
