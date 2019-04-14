@@ -40,7 +40,7 @@ function barChartData(events, xLabelFn, barOpts) {
   // Partition all cross-training events into a bucket per bar
   //   Note that the height of these bars will always be half of maximum run height
   const crossTrainingSeries = dates.map(endDate => {
-    const crossTrains = events.filter(e => e['@type'] === 'CrossTrain');
+    const crossTrains = events.filter(e => ['CrossTrain','Run+CrossTrain'].includes(e['@type']));
     const filtered = filterEventsByEndDate(crossTrains, endDate, barOpts.units, barOpts.length);
 
     if (filtered.length > 0) {
