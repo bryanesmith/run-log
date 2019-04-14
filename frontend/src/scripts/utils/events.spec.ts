@@ -70,13 +70,18 @@ test('averageMPH for interval run event', () => {
   expect(averageMPH([intervals])).toBe(10.0);
 });
 
+function undefToZero(someVal: number | undefined) {
+  return typeof someVal !== 'undefined' ? someVal : 0;
+}
+
 test('averageMPH for heterogeneous events', () => {
   const events = [
     nonRun,
     steadyRun,
     intervals
   ];
-  expect(averageMPH(events).toFixed(2)).toBe("6.36");
+  const avg = averageMPH(events);
+  expect(undefToZero(averageMPH(events)).toFixed(2)).toBe("6.36");
 });
 
 test('averagePace for no events', () => {
@@ -89,7 +94,7 @@ test('averagePace for several types of events', () => {
     steadyRun,
     intervals
   ];
-  expect(averagePace(events).toFixed(2)).toBe("565.71");
+  expect(undefToZero(averagePace(events)).toFixed(2)).toBe("565.71");
 });
 
 test('averagePace for single steady runs with duration', () => {
