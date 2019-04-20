@@ -9,7 +9,7 @@ object Demo {
   def events = Seq(
     Event(
       atId = "_:275",
-      atType = Type.Run,
+      atType = Type.RunCrossTrain,
       date = "2019-04-20",
       runData = Some(
         Intervals(
