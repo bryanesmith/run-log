@@ -45,7 +45,7 @@ function barChartData(events, xLabelFn, barOpts) {
 
     if (filtered.length > 0) {
       // If no runs, any height will do, so use 1
-      return isNaN(maxDistance) ? 1 : maxDistance / 2;
+      return isNaN(maxDistance) || maxDistance === 0 ? 1 : maxDistance / 2;
     } else {
       return null; // No activity
     }
