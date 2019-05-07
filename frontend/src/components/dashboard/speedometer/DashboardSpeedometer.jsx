@@ -29,7 +29,7 @@ function data(mph) {
 
 export default props => {
   const mphUndef = averageMPH(props.events);
-  const mph = mphUndef !== 'undefined' ? mphUndef : 0;
+  const mph = typeof mphUndef !== 'undefined' ? mphUndef : 0;
   return (
     <div className="dashboard-speedometer widget-stat-imposter col-xs-4">
       <div className="speed-achieved">{mph.toFixed(2)} mph</div>
