@@ -8,6 +8,126 @@ object Demo {
 
   def events = Seq(
     Event(
+      atId = "_:306",
+      atType = Type.CrossTrain,
+      date = "2019-07-13"
+    ),
+    Event(
+      atId = "_:305",
+      atType = Type.CrossTrain,
+      date = "2019-07-10"
+    ),
+    Event(
+      atId = "_:304",
+      atType = Type.CrossTrain,
+      date = "2019-07-08"
+    ),
+    Event(
+      atId = "_:303",
+      atType = Type.CrossTrain,
+      date = "2019-07-06"
+    ),
+    Event(
+      atId = "_:302",
+      atType = Type.CrossTrain,
+      date = "2019-07-03"
+    ),
+    Event(
+      atId = "_:301",
+      atType = Type.CrossTrain,
+      date = "2019-07-01"
+    ),
+    Event(
+      atId = "_:300",
+      atType = Type.CrossTrain,
+      date = "2019-06-29"
+    ),
+    Event(
+      atId = "_:299",
+      atType = Type.CrossTrain,
+      date = "2019-06-28"
+    ),
+    Event(
+      atId = "_:298",
+      atType = Type.CrossTrain,
+      date = "2019-06-26"
+    ),
+    Event(
+      atId = "_:297",
+      atType = Type.CrossTrain,
+      date = "2019-06-25"
+    ),
+    Event(
+      atId = "_:296",
+      atType = Type.CrossTrain,
+      date = "2019-06-21"
+    ),
+    Event(
+      atId = "_:295",
+      atType = Type.CrossTrain,
+      date = "2019-06-20"
+    ),
+    Event(
+      atId = "_:294",
+      atType = Type.CrossTrain,
+      date = "2019-06-15"
+    ),
+    Event(
+      atId = "_:293",
+      atType = Type.CrossTrain,
+      date = "2019-06-14"
+    ),
+    Event(
+      atId = "_:292",
+      atType = Type.CrossTrain,
+      date = "2019-06-12"
+    ),
+    Event(
+      atId = "_:291",
+      atType = Type.CrossTrain,
+      date = "2019-06-11"
+    ),
+    Event(
+      atId = "_:290",
+      atType = Type.CrossTrain,
+      date = "2019-06-08"
+    ),
+    Event(
+      atId = "_:289",
+      atType = Type.CrossTrain,
+      date = "2019-06-07"
+    ),
+    Event(
+      atId = "_:288",
+      atType = Type.CrossTrain,
+      date = "2019-06-04"
+    ),
+    Event(
+      atId = "_:287",
+      atType = Type.CrossTrain,
+      date = "2019-06-03"
+    ),
+    Event(
+      atId = "_:286",
+      atType = Type.CrossTrain,
+      date = "2019-06-01"
+    ),
+    Event(
+      atId = "_:285",
+      atType = Type.CrossTrain,
+      date = "2019-05-29"
+    ),
+    Event(
+      atId = "_:284",
+      atType = Type.CrossTrain,
+      date = "2019-05-24"
+    ),
+    Event(
+      atId = "_:283",
+      atType = Type.CrossTrain,
+      date = "2019-05-22"
+    ),
+    Event(
       atId = "_:282",
       atType = Type.CrossTrain,
       date = "2019-05-20",
