@@ -10,7 +10,7 @@ object Demo {
     Event(
       atId = "_:333",
       atType = Type.Run,
-      date = "2019-09-20",
+      date = "2019-09-19",
       runData = Some(
         SteadyStateRun(
           category = SteadyStateRunCategory.Casual,
