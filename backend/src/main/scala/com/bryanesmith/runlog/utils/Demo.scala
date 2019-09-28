@@ -8,6 +8,36 @@ object Demo {
 
   def events = Seq(
     Event(
+      atId = "_:335",
+      atType = Type.RunCrossTrain,
+      date = "2019-09-28",
+      runData = Some(
+        Intervals(
+          category = IntervalsCategory.Intervals,
+          count = 6,
+          intervalDuration = Some("PT1M"),
+          intervalSpeed = Some(8.9),
+          restDuration = Some("PT1M")
+        )
+      ),
+      notes = Some("1.96mi + lift")
+    ),
+    Event(
+      atId = "_:334",
+      atType = Type.RunCrossTrain,
+      date = "2019-09-21",
+      runData = Some(
+        Intervals(
+          category = IntervalsCategory.Intervals,
+          count = 6,
+          intervalDuration = Some("PT1M"),
+          intervalSpeed = Some(8.8),
+          restDuration = Some("PT1M")
+        )
+      ),
+      notes = Some("1.96mi + lift")
+    ),
+    Event(
       atId = "_:333",
       atType = Type.Run,
       date = "2019-09-19",
