@@ -8,6 +8,17 @@ object Demo {
 
   def events = Seq(
     Event(
+      atId = "_:349",
+      atType = Type.Run,
+      date = "2019-11-03",
+      runData = Some(
+        SteadyStateRun(
+          category = SteadyStateRunCategory.Distance,
+          distance = Some(10.78)
+        )
+      )
+    ),
+    Event(
       atId = "_:348",
       atType = Type.CrossTrain,
       date = "2019-10-31"
