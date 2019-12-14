@@ -92,6 +92,10 @@ jobs:
             cd backend
             sbt assembly
             cd ..
+      - persist_to_workspace:
+          root: .
+          paths:
+            - backend/
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   deploy_run_log:
