@@ -5,11 +5,23 @@ jobs:
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   build_run_log:
+
+    parameters:
+      yarn_version:
+        description: Yarn version
+        type: string
+        default: 0.27.5
+
     docker:
       - image: openjdk:8
         environment:
           WEB_ASSETS_DIST: backend/src/main/resources/frontend-dist
+
     steps:
+      - run:
+          name: Install Yarn
+          command: |
+            curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version << parameters.yarn_version >>
       - checkout
       - run:
           name: Build frontend
