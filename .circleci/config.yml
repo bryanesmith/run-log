@@ -110,6 +110,10 @@ jobs:
           command: |
             echo PRODUCTION_SERVER_USER=$PRODUCTION_SERVER_USER
             echo PRODUCTION_SERVER_DOMAIN=$PRODUCTION_SERVER_DOMAIN
+      - run:
+          name: Adding server to known_hosts
+          command: |
+            ssh-keygen -F ${PRODUCTION_SERVER_DOMAIN} >/dev/null || ssh-keyscan -H ${PRODUCTION_SERVER_DOMAIN} >> ~/.ssh/known_hosts
       # TODO: shouldn't assume run-log version 0.0.1
       # TODO: shouldn't assume Scala version 2.12
       - run:
