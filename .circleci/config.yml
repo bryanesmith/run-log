@@ -100,11 +100,26 @@ jobs:
       - image: openjdk:8
 
     steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "71:a6:69:31:f9:43:92:0e:42:4c:b0:cf:b4:03:ff:6e"
       - attach_workspace:
           at: .
       - run:
-          name: Bar
-          command: echo "Deploying"
+          name: Printing environment variables
+          command: |
+            echo PRODUCTION_SERVER_USER=$PRODUCTION_SERVER_USER
+            echo PRODUCTION_SERVER_DOMAIN=$PRODUCTION_SERVER_DOMAIN
+      # TODO: shouldn't assume run-log version 0.0.1
+      # TODO: shouldn't assume Scala version 2.12
+      - run:
+          name: Deploying to server
+          command: |
+            scp backend/target/scala-2.12/run-log-assembly-0.0.1-SNAPSHOT.jar ${PRODUCTION_SERVER_USER}@${PRODUCTION_SERVER_DOMAIN}:/home/ec2-user/run-log/run-log.latest.jar
+      - run:
+          name: Restarting server
+          command: |
+            ssh -f ${PRODUCTION_SERVER_USER}@${PRODUCTION_SERVER_DOMAIN} "sudo sh -c 'nohup /home/${PRODUCTION_SERVER_USER}/bin/restart-run-log > /dev/null 2>&1 &'"
 
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 workflows:
