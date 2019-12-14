@@ -43,10 +43,8 @@ jobs:
           command: |
             cd ..
             if [ ! -d "$WEB_ASSETS_DIST" ]; then
-              mkdir "$WEB_ASSETS_DIST"
+              mkdir -p "$WEB_ASSETS_DIST"
             fi
-            ls frontend # debug
-            ls frontend/dist # debug
             cp frontend/dist/* "$WEB_ASSETS_DIST"
       - run:
           name: View web assets
