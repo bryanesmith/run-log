@@ -119,6 +119,9 @@ jobs:
       - run:
           name: Deploying to server
           command: |
+            ls backend
+            ls backend/target
+            scp backend/target/scala-2.12
             scp backend/target/scala-2.12/run-log-assembly-0.0.1-SNAPSHOT.jar ${PRODUCTION_SERVER_USER}@${PRODUCTION_SERVER_DOMAIN}:/home/ec2-user/run-log/run-log.latest.jar
       - run:
           name: Restarting server
