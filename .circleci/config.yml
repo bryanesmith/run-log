@@ -32,7 +32,7 @@ jobs:
       - checkout
       - run:
           name: Create frontend config
-          cp frontend/src/config-template.json frontend/src/config.json
+          command: cp frontend/src/config-template.json frontend/src/config.json
       - run:
           name: Build frontend
           command: |
