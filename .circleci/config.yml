@@ -10,6 +10,7 @@ jobs:
         environment:
           WEB_ASSETS_DIST: run-log/backend/src/main/resources/frontend-dist
     steps:
+      - checkout
       - run:
           name: List files
           command: ls
