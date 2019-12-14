@@ -20,8 +20,9 @@ jobs:
 
     docker:
       - image: circleci/node:<< parameters.node_version >>
-        environment:
-          WEB_ASSETS_DIST: backend/src/main/resources/frontend-dist
+
+    environment:
+      WEB_ASSETS_DIST: backend/src/main/resources/frontend-dist
 
     steps:
       - run:
@@ -59,6 +60,13 @@ jobs:
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   build_run_log_backend:
 
+    parameters:
+
+      sbt_version:
+        description: sbt version
+        type: string
+        default: 1.0.4
+
     docker:
       - image: openjdk:8
 
@@ -66,8 +74,10 @@ jobs:
       - attach_workspace:
           at: .
       - run:
-          name: Bar
-          command: echo "Building backend"
+          name: Install sbt
+          run: |
+            sudo apt-get update
+            sudo apt-get install -y sbt=<< parameters.sbt_version >>
       - run:
           name: Run backend unit tests
           command: echo "TODO"
