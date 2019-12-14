@@ -88,7 +88,10 @@ jobs:
           command: echo "TODO"
       - run:
           name: Build JAR
-          command: sbt assembly
+          command: |
+            cd backend
+            sbt assembly
+            cd ..
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   deploy_run_log:
