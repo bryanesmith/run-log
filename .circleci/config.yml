@@ -42,13 +42,19 @@ jobs:
           name: Copy web assets
           command: |
             cd ..
-            if [! -d "$WEB_ASSETS_DIST" ]; then
+            if [ ! -d "$WEB_ASSETS_DIST" ]; then
               mkdir "$WEB_ASSETS_DIST"
             fi
+            ls frontend # debug
+            ls frontend/dist # debug
             cp frontend/dist/* "$WEB_ASSETS_DIST"
       - run:
           name: View web assets
           command: ls "$WEB_ASSETS_DIST"
+      - persist_to_workspace:
+          root: .
+          paths:
+            - backend/
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   build_run_log_backend:
@@ -57,9 +63,8 @@ jobs:
       - image: openjdk:8-node
 
     steps:
-      - run:
-          name: View web assets
-          command: ls "$WEB_ASSETS_DIST"
+      - attach_workspace:
+          at: .
       - run:
           name: Bar
           command: echo "Building backend"
@@ -77,6 +82,8 @@ jobs:
       - image: openjdk:8
 
     steps:
+      - attach_workspace:
+          at: .
       - run:
           name: Bar
           command: echo "Deploying"
