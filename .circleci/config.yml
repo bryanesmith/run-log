@@ -11,7 +11,7 @@ jobs:
       node_version:
         description: NodeJS version
         type: string
-        default: 9.10.2
+        default: 9.10.1
 
       yarn_version:
         description: Yarn version
