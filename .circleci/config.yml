@@ -8,25 +8,22 @@ jobs:
     docker:
       - image: openjdk:8
         environment:
-          WEB_ASSETS_DIST: run-log/backend/src/main/resources/frontend-dist
+          WEB_ASSETS_DIST: backend/src/main/resources/frontend-dist
     steps:
       - checkout
       - run:
-          name: List files
-          command: ls
-      - run:
           name: Build frontend
           command: |
-            cd run-log/frontend
+            cd frontend
             yarn && yarn build
       - run:
           name: Copy web assets
           command: |
-            cd ../..
+            cd ..
             if [! -d "$WEB_ASSETS_DIST" ]; then
               mkdir "$WEB_ASSETS_DIST"
             fi
-            cp run-log/frontend/dist/* "$WEB_ASSETS_DIST"
+            cp frontend/dist/* "$WEB_ASSETS_DIST"
       - run:
           name: View web assets
           command: ls "$WEB_ASSETS_DIST"
