@@ -7,8 +7,8 @@ jobs:
   build_run_log:
     docker:
       - image: openjdk:8
-      environment:
-        WEB_ASSETS_DIST: run-log/backend/src/main/resources/frontend-dist
+        environment:
+          WEB_ASSETS_DIST: run-log/backend/src/main/resources/frontend-dist
     steps:
       - run:
           name: Build frontend
