@@ -47,10 +47,7 @@ jobs:
             fi
       - run:
           name: Copy web assets
-          command: |
-            ls frontend
-            ls frontend/dist
-            cp frontend/dist/* "$WEB_ASSETS_DIST"
+          command: cp frontend/dist/* "$WEB_ASSETS_DIST"
       - run:
           name: View web assets
           command: ls "$WEB_ASSETS_DIST"
@@ -63,7 +60,7 @@ jobs:
   build_run_log_backend:
 
     docker:
-      - image: openjdk:8-node
+      - image: openjdk:8
 
     steps:
       - attach_workspace:
