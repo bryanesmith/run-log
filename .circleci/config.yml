@@ -4,16 +4,22 @@ version: 2.1
 jobs:
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  build_run_log:
+  build_run_log_frontend:
 
     parameters:
+
+      node_version:
+        description: NodeJS version
+        type: string
+        default: 9.20.2
+
       yarn_version:
         description: Yarn version
         type: string
         default: 0.27.5
 
     docker:
-      - image: openjdk:8-node
+      - image: circleci/node:<< parameters.node_version >>
         environment:
           WEB_ASSETS_DIST: backend/src/main/resources/frontend-dist
 
@@ -40,6 +46,20 @@ jobs:
       - run:
           name: View web assets
           command: ls "$WEB_ASSETS_DIST"
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  build_run_log_backend:
+
+    docker:
+      - image: openjdk:8-node
+
+    steps:
+      - run:
+          name: View web assets
+          command: ls "$WEB_ASSETS_DIST"
+      - run:
+          name: Bar
+          command: echo "Building backend"
       - run:
           name: Run backend unit tests
           command: echo "TODO"
@@ -49,8 +69,10 @@ jobs:
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   deploy_run_log:
+
     docker:
       - image: openjdk:8
+
     steps:
       - run:
           name: Bar
@@ -61,7 +83,10 @@ workflows:
   version: 2
   build_and_deploy_run_log:
     jobs:
-      - build_run_log
+      - build_run_log_frontend
+      - build_run_log_backend:
+          requires:
+            - build_run_log_frontend
       - deploy_run_log:
           requires:
-            - build_run_log
+            - build_run_log_backend
