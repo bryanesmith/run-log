@@ -9,8 +9,8 @@ jobs:
       - image: openjdk:8
     steps:
       - run:
-        name: Foo
-        command: echo "Building"
+          name: Foo
+          command: echo "Building"
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   deploy_run_log:
@@ -18,8 +18,8 @@ jobs:
       - image: openjdk:8
     steps:
       - run:
-        name: Bar
-        command: echo "Deploying"
+          name: Bar
+          command: echo "Deploying"
 
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 workflows:
@@ -28,5 +28,5 @@ workflows:
     jobs:
       - build_run_log
       - deploy_run_log
-        requires:
-          - build_run_log
+          requires:
+            - build_run_log
