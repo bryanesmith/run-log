@@ -11,6 +11,9 @@ jobs:
           WEB_ASSETS_DIST: run-log/backend/src/main/resources/frontend-dist
     steps:
       - run:
+          name: List files
+          command: ls *
+      - run:
           name: Build frontend
           command: |
             cd run-log/frontend
