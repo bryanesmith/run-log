@@ -76,8 +76,8 @@ jobs:
       - run:
           name: Install sbt
           command: |
-            sudo apt-get update
-            sudo apt-get install -y sbt=<< parameters.sbt_version >>
+            apt-get update
+            apt-get install -y sbt=<< parameters.sbt_version >>
       - run:
           name: Run backend unit tests
           command: echo "TODO"
