@@ -49,7 +49,7 @@ jobs:
           name: Copy web assets
           command: |
             ls frontend
-            lf frontend/dist
+            ls frontend/dist
             cp frontend/dist/* "$WEB_ASSETS_DIST"
       - run:
           name: View web assets
