@@ -38,13 +38,18 @@ jobs:
           command: |
             cd frontend
             yarn && yarn build
-      - run:
-          name: Copy web assets
-          command: |
             cd ..
+      - run:
+          name: Prepare web assets directory
+          command: |
             if [ ! -d "$WEB_ASSETS_DIST" ]; then
               mkdir -p "$WEB_ASSETS_DIST"
             fi
+      - run:
+          name: Copy web assets
+          command: |
+            ls frontend
+            lf frontend/dist
             cp frontend/dist/* "$WEB_ASSETS_DIST"
       - run:
           name: View web assets
