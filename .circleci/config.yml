@@ -13,7 +13,7 @@ jobs:
         default: 0.27.5
 
     docker:
-      - image: openjdk:8
+      - image: openjdk:8-node
         environment:
           WEB_ASSETS_DIST: backend/src/main/resources/frontend-dist
 
@@ -21,8 +21,7 @@ jobs:
       - run:
           name: Install Yarn
           command: |
-            # curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version << parameters.yarn_version >>
-            curl -o- -L https://yarnpkg.com/install.sh | bash
+            curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version << parameters.yarn_version >>
             yarn -v
       - checkout
       - run:
