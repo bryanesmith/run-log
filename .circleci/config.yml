@@ -31,6 +31,9 @@ jobs:
             yarn -v
       - checkout
       - run:
+          name: Create frontend config
+          cp frontend/src/config-template.json frontend/src/config.json
+      - run:
           name: Build frontend
           command: |
             cd frontend
