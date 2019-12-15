@@ -39,6 +39,7 @@ jobs:
                 "baseUrl": "${PRODUCTION_SERVER_DOMAIN}"
               }
             EOF
+            cat frontend/src/config.json
       - run:
           name: Build frontend
           command: |
