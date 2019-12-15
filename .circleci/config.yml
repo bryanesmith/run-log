@@ -86,6 +86,16 @@ jobs:
         type: string
         default: 1.0.4
 
+      runlog_backend_version:
+        description: run_log version
+        type: string
+        default: 0.0.1-SNAPSHOT   # Specified in backend/build.sbt
+
+      scala_version:
+        description: Scala version
+        type: string
+        default: 2.12             # Specified in backend/build.sbt
+
     docker:
       - image: openjdk:8
 
@@ -126,6 +136,10 @@ jobs:
             cd backend
             sbt assembly
             cd ..
+      - run:
+          name: Rename JAR
+          command: |
+            cp backend/target/scala-<< parameters.scala_version >>/run-log-assembly-<< parameters.runlog_backend_version >>.jar run-log.jar
       - save_cache:
           key: ivy2-cache-{{ .Branch }}--{{ checksum "backend/build.sbt" }}
           paths:
@@ -133,7 +147,7 @@ jobs:
       - persist_to_workspace:
           root: .
           paths:
-            - backend/
+            - run-log.jar
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   deploy_run_log:
@@ -156,12 +170,10 @@ jobs:
           name: Adding server to known_hosts
           command: |
             ssh-keygen -F ${PRODUCTION_SERVER_DOMAIN} >/dev/null || ssh-keyscan -H ${PRODUCTION_SERVER_DOMAIN} >> ~/.ssh/known_hosts
-      # TODO: shouldn't assume run-log version 0.0.1
-      # TODO: shouldn't assume Scala version 2.12
       - run:
           name: Deploying to server
           command: |
-            scp backend/target/scala-2.12/run-log-assembly-0.0.1-SNAPSHOT.jar ${PRODUCTION_SERVER_USER}@${PRODUCTION_SERVER_DOMAIN}:/home/ec2-user/run-log/run-log.latest.jar
+            scp run-log.jar ${PRODUCTION_SERVER_USER}@${PRODUCTION_SERVER_DOMAIN}:/home/ec2-user/run-log/run-log.latest.jar
       - run:
           name: Restarting server
           command: |
