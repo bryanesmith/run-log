@@ -35,7 +35,7 @@ jobs:
           name: Create frontend configuration
           command: |
             FE_CONFIG=frontend/src/config.json
-            echo \<<- EOF > "${FE_CONFIG}"
+            cat \<<- EOF > "${FE_CONFIG}"
               {
                 "baseUrl": "${PRODUCTION_SERVER_DOMAIN}"
               }
@@ -44,6 +44,7 @@ jobs:
               echo "File not found: ${FE_CONFIG}"
               exit 1
             else
+              echo "Printing ${FE_CONFIG}:"
               cat "${FE_CONFIG}"
             fi
       - run:
@@ -99,7 +100,7 @@ jobs:
           name: Create backend configuration
           command: |
             BE_CONFIG=backend/src/main/resources/application.conf
-            echo \<<- EOF > "${BE_CONFIG}"
+            cat \<<- EOF > "${BE_CONFIG}"
               {
                 secret = "${BACKEND_SECRET_CONGIF_GUID}"
               }
