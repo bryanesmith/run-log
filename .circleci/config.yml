@@ -33,7 +33,12 @@ jobs:
       - checkout
       - run:
           name: Create frontend config
-          command: cp frontend/src/config-template.json frontend/src/config.json
+          command: |
+            echo << EOF > frontend/src/config.json
+              {
+                "baseUrl": "${PRODUCTION_SERVER_DOMAIN}"
+              }
+            EOF
       - run:
           name: Build frontend
           command: |
@@ -83,6 +88,14 @@ jobs:
             apt-get update
             apt-get install -y sbt
             apt-get clean && apt-get autoclean
+      - run:
+          name: Create backend configuration
+          command: |
+            echo << EOF > backend/src/main/resources/application.conf
+              {
+                secret = "${BACKEND_SECRET_CONGIF_GUID}"
+              }
+            EOF
       - run:
           name: Run backend unit tests
           command: echo "TODO"
