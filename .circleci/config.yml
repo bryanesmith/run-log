@@ -32,14 +32,20 @@ jobs:
             yarn -v
       - checkout
       - run:
-          name: Create frontend config
+          name: Create frontend configuration
           command: |
-            echo \<< EOF > frontend/src/config.json
+            FE_CONFIG=frontend/src/config.json
+            echo \<<- EOF > "${FE_CONFIG}"
               {
                 "baseUrl": "${PRODUCTION_SERVER_DOMAIN}"
               }
             EOF
-            cat frontend/src/config.json
+            if [ ! -e "${FE_CONFIG}" ]; then
+              echo "File not found: ${FE_CONFIG}"
+              exit 1
+            else
+              cat "${FE_CONFIG}"
+            fi
       - run:
           name: Build frontend
           command: |
@@ -92,11 +98,16 @@ jobs:
       - run:
           name: Create backend configuration
           command: |
-            echo \<< EOF > backend/src/main/resources/application.conf
+            BE_CONFIG=backend/src/main/resources/application.conf
+            echo \<<- EOF > "${BE_CONFIG}"
               {
                 secret = "${BACKEND_SECRET_CONGIF_GUID}"
               }
             EOF
+            if [ ! -e "${BE_CONFIG}" ]; then
+              echo "File not found: ${BE_CONFIG}"
+              exit 1
+            else
       - run:
           name: Run backend unit tests
           command: echo "TODO"
