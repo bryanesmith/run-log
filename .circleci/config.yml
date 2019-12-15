@@ -108,7 +108,7 @@ jobs:
             if [ ! -e "${BE_CONFIG}" ]; then
               echo "File not found: ${BE_CONFIG}"
               exit 1
-            else
+            fi
       - run:
           name: Run backend unit tests
           command: echo "TODO"
