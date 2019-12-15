@@ -94,7 +94,7 @@ jobs:
       scala_version:
         description: Scala version
         type: string
-        default: 2.12             # Specified in backend/build.sbt
+        default: "2.12"           # Specified in backend/build.sbt
 
     docker:
       - image: openjdk:8
