@@ -36,9 +36,9 @@ jobs:
           command: |
             FE_CONFIG=frontend/src/config.json
             cat \<<- EOF > "${FE_CONFIG}"
-              {
-                "baseUrl": "${PRODUCTION_SERVER_DOMAIN}"
-              }
+            {
+              "baseUrl": "${PRODUCTION_SERVER_DOMAIN}"
+            }
             EOF
             if [ ! -e "${FE_CONFIG}" ]; then
               echo "File not found: ${FE_CONFIG}"
@@ -101,9 +101,9 @@ jobs:
           command: |
             BE_CONFIG=backend/src/main/resources/application.conf
             cat \<<- EOF > "${BE_CONFIG}"
-              {
-                secret = "${BACKEND_SECRET_CONGIF_GUID}"
-              }
+            {
+              secret = "${BACKEND_SECRET_CONGIF_GUID}"
+            }
             EOF
             if [ ! -e "${BE_CONFIG}" ]; then
               echo "File not found: ${BE_CONFIG}"
