@@ -34,7 +34,7 @@ jobs:
       - run:
           name: Create frontend config
           command: |
-            echo << EOF > frontend/src/config.json
+            echo \<< EOF > frontend/src/config.json
               {
                 "baseUrl": "${PRODUCTION_SERVER_DOMAIN}"
               }
@@ -91,7 +91,7 @@ jobs:
       - run:
           name: Create backend configuration
           command: |
-            echo << EOF > backend/src/main/resources/application.conf
+            echo \<< EOF > backend/src/main/resources/application.conf
               {
                 secret = "${BACKEND_SECRET_CONGIF_GUID}"
               }
