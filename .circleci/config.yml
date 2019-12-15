@@ -47,12 +47,18 @@ jobs:
               echo "Printing ${FE_CONFIG}:"
               cat "${FE_CONFIG}"
             fi
+      - restore_cache:
+          key: npm-cache-{{ .Branch }}--{{ checksum "frontend/package.json" }}
       - run:
           name: Build frontend
           command: |
             cd frontend
             yarn && yarn build
             cd ..
+      - save_cache:
+          key: npm-cache-{{ .Branch }}--{{ checksum "frontend/package.json" }}
+          paths:
+            - node_modules
       - run:
           name: Prepare web assets directory
           command: |
@@ -112,12 +118,18 @@ jobs:
       - run:
           name: Run backend unit tests
           command: echo "TODO"
+      - restore_cache:
+          key: ivy2-cache-{{ .Branch }}--{{ checksum "backend/build.sbt" }}
       - run:
           name: Build JAR
           command: |
             cd backend
             sbt assembly
             cd ..
+      - save_cache:
+          key: ivy2-cache-{{ .Branch }}--{{ checksum "backend/build.sbt" }}
+          paths:
+            - ~/.ivy2/cache
       - persist_to_workspace:
           root: .
           paths:
