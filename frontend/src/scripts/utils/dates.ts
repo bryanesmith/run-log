@@ -12,7 +12,7 @@ export function formatDate(date: Date) {
 }
 
 function durationFormat(someDuration: any, someFormat: string) {
-  return moment.utc(someDuration.as('milliseconds')).format(someFormat)
+  return moment.utc(someDuration.as('milliseconds')).format(someFormat);
 }
 
 /**
