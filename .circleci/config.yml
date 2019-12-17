@@ -68,7 +68,7 @@ jobs:
               cat "${FE_CONFIG}"
             fi
       - restore_cache:
-          key: npm-cache-{{ .Branch }}-v2--{{ checksum "frontend/package.json" }}
+          key: npm-cache-{{ .Branch }}-v3--{{ checksum "frontend/package.json" }}
       - run:
           name: Build frontend
           command: |
@@ -76,7 +76,7 @@ jobs:
             yarn && yarn build
             cd ..
       - save_cache:
-          key: npm-cache-{{ .Branch }}-v2--{{ checksum "frontend/package.json" }}
+          key: npm-cache-{{ .Branch }}-v3--{{ checksum "frontend/package.json" }}
           paths:
             - frontend/node_modules
       - run:
