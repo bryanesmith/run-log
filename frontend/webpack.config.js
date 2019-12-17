@@ -107,12 +107,6 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: 'src/index.html'
     })
-
-    // DEBUG:
-    // }),
-    // new webpack.optimize.CommonsChunkPlugin({
-    //   names: ['vendor', 'manifest']
-    // })
   ],
   resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx'],
