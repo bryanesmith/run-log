@@ -24,7 +24,7 @@ export default function(state = INITIAL_STATE, action) {
       };
     case RECEIVE_LOGIN_SUCCESS:
       return {
-        ...state,
+        ...state, 
         loading: false,
         authenticated: true,
         message: null,

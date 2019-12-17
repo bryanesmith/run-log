@@ -1,14 +1,14 @@
 const webpack = require('webpack');
 const path = require('path');
 
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const extractCSS = new ExtractTextPlugin('bundle.[chunkhash].css');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const LIBS = [ 'bootstrap', 'chartist', 'es6-promise', 'isomorphic-fetch', 'jquery', 'moment', 'moment-duration-format', 'react', 'react-bootstrap', 'react-chartist', 'react-dom', 'react-loader', 'react-redux', 'react-router-bootstrap', 'react-router-dom', 'redux', 'redux-logger', 'redux-thunk', 'react-form' ];
 
 module.exports = {
+  mode: 'development',
   context: path.resolve(__dirname, '.'),
   entry: {
     bundle: './src/scripts/app.js',
@@ -49,22 +49,38 @@ module.exports = {
             }
           }
         ]
-      },{
-        test: /\.scss$/,
-        loader: extractCSS.extract([
+      },
+      // {
+      //   test: /\.scss$/,
+      //   loader: extractCSS.extract([
+      //     {
+      //       loader: 'css-loader',
+      //     },{
+      //       loader: 'sass-loader',
+      //       options: {
+      //         sourceMap: true,
+      //         includePaths: [ 'src/styles' ] // include constants without relative paths
+      //       }
+      //     }
+      //   ])
+      // },
+      {
+        test: /\.scss/,
+        use: [
+          MiniCssExtractPlugin.loader,
+          'css-loader',
           {
-            loader: 'css-loader',
-          },{
             loader: 'sass-loader',
             options: {
               sourceMap: true,
               includePaths: [ 'src/styles' ] // include constants without relative paths
             }
           }
-        ])
-      },{
+        ],
+      },
+      {
         test: /\.css$/,
-        loader: extractCSS.extract(['css-loader'])
+        use: [ MiniCssExtractPlugin.loader, 'css-loader' ],
       },{
         test: /\.(png|jpg|svg|eot|ttf|woff|woff2)$/,
         use: [{
@@ -75,7 +91,10 @@ module.exports = {
     ]
   }, // module,
   plugins: [
-    extractCSS,
+    new MiniCssExtractPlugin({
+      filename: '[name].css',
+      chunkFilename: '[id].css',
+    }),
     new webpack.ProvidePlugin({
       $: 'jquery',
       jQuery: 'jquery',
@@ -87,9 +106,6 @@ module.exports = {
     new CleanWebpackPlugin([ 'dist' ], { verbose: true }),
     new HtmlWebpackPlugin({
       template: 'src/index.html'
-    }),
-    new webpack.optimize.CommonsChunkPlugin({
-      names: ['vendor', 'manifest']
     })
   ],
   resolve: {
