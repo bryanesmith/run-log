@@ -1,5 +1,17 @@
 version: 2.1
 
+#
+# REQUIRED ENVIRONMENT VARIABLES:
+# In Jobs > run-log settings (gear icon) > Environment Variables, set up:
+#
+#   - AWS_ACCESS_KEY_ID
+#   - AWS_S3_BUCKET_NAME_WEB_ASSETS
+#   - AWS_SECRET_ACCESS_KEY
+#   - BACKEND_SECRET_CONGIF_GUID
+#   - PRODUCTION_SERVER_DOMAIN
+#   - PRODUCTION_SERVER_USER
+#
+
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 jobs:
 
@@ -8,21 +20,23 @@ jobs:
 
     parameters:
 
-      node_version:
-        description: NodeJS version
+      python_version:
+        description: Python version
         type: string
-        default: 9.10.1
+        default: "3.8"
 
       yarn_version:
         description: Yarn version
         type: string
         default: 0.27.5
 
-    docker:
-      - image: circleci/node:<< parameters.node_version >>
+      aws_region:
+        description: AWS region
+        type: string
+        default: "us-east-1"
 
-    environment:
-      WEB_ASSETS_DIST: backend/src/main/resources/frontend-dist
+    docker:
+      - image: circleci/python:<< parameters.python_version >>-node
 
     steps:
       - run:
@@ -30,6 +44,11 @@ jobs:
           command: |
             curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version << parameters.yarn_version >>
             yarn -v
+      - run:
+          name: Install AWS CLI
+          command: |
+            pip install awscli
+            export AWS_DEFAULT_REGION= << parameters.aws_region >>
       - checkout
       - run:
           name: Create frontend configuration
@@ -60,21 +79,13 @@ jobs:
           paths:
             - frontend/node_modules
       - run:
-          name: Prepare web assets directory
-          command: |
-            if [ ! -d "$WEB_ASSETS_DIST" ]; then
-              mkdir -p "$WEB_ASSETS_DIST"
-            fi
-      - run:
-          name: Copy web assets
-          command: cp frontend/dist/* "$WEB_ASSETS_DIST"
-      - run:
           name: View web assets
-          command: ls "$WEB_ASSETS_DIST"
-      - persist_to_workspace:
-          root: .
-          paths:
-            - backend/
+          command: ls frontend/dist
+      # TODO: Set up s3 bucket, if not exists, using Terraform
+      - run:
+          name: Sync web assets with S3
+          command: aws s3 sync frontend/dist s3://${AWS_S3_BUCKET_NAME_WEB_ASSETS}
+
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   build_run_log_backend:
@@ -100,8 +111,7 @@ jobs:
       - image: openjdk:8
 
     steps:
-      - attach_workspace:
-          at: .
+      - checkout
       - run:
           name: Install sbt
           command: |
