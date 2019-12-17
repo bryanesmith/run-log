@@ -47,7 +47,7 @@ jobs:
       - run:
           name: Install AWS CLI
           command: |
-            pip install awscli
+            pip3 install awscli --user
             export AWS_DEFAULT_REGION= << parameters.aws_region >>
       - checkout
       - run:
