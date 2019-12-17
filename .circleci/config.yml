@@ -38,6 +38,9 @@ jobs:
     docker:
       - image: circleci/python:<< parameters.python_version >>-node
 
+    environment:
+      - AWS_DEFAULT_REGION: << parameters.aws_region >>
+
     steps:
       - run:
           name: Install Yarn
@@ -46,9 +49,7 @@ jobs:
             yarn -v
       - run:
           name: Install AWS CLI
-          command: |
-            pip3 install awscli --user
-            export AWS_DEFAULT_REGION= << parameters.aws_region >>
+          command: pip3 install awscli --user
       - checkout
       - run:
           name: Create frontend configuration
