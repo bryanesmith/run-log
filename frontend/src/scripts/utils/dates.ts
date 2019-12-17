@@ -15,7 +15,8 @@ export function formatDate(date: Date) {
  * E.g., "PT2M35S" -> "2m 35s"
  */
 export function formatDuration(duration: string) {
-  return moment.duration(duration).format('h[h] m[m] s[s]');
+  // return moment.duration(duration).format('h[h] m[m] s[s]');
+  return moment.utc(moment.duration(duration).as('milliseconds')).format('HH:mm:ss')
 }
 
 /**
@@ -58,7 +59,8 @@ export function durationToSeconds(duration: string) {
  * E.g, 155 -> "2:35"
  */
 export function secondsToMinuteMiles(secs: number) {
-  return moment.duration(secs, 'seconds').format('m[m] s[s]');
+  // return moment.duration(secs, 'seconds').format);
+  return moment.utc(moment.duration(secs, 'seconds').as('milliseconds')).format('m[m] s[s]')
 }
 
 /**
