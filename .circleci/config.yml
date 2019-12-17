@@ -43,6 +43,11 @@ jobs:
 
     steps:
       - run:
+          name: Debugging
+          command: |
+            npm -v
+            node -v
+      - run:
           name: Install Yarn
           command: |
             curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version << parameters.yarn_version >>
@@ -68,7 +73,7 @@ jobs:
               cat "${FE_CONFIG}"
             fi
       - restore_cache:
-          key: npm-cache-{{ .Branch }}-v3--{{ checksum "frontend/package.json" }}
+          key: npm-cache-{{ .Branch }}-v4--{{ checksum "frontend/package.json" }}
       - run:
           name: Build frontend
           command: |
@@ -76,7 +81,7 @@ jobs:
             yarn && yarn build
             cd ..
       - save_cache:
-          key: npm-cache-{{ .Branch }}-v3--{{ checksum "frontend/package.json" }}
+          key: npm-cache-{{ .Branch }}-v4--{{ checksum "frontend/package.json" }}
           paths:
             - frontend/node_modules
       - run:
