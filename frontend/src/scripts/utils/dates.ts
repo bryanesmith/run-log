@@ -11,15 +11,11 @@ export function formatDate(date: Date) {
   });
 }
 
-function durationFormat(someDuration: any, someFormat: string) {
-  return moment.utc(someDuration.as('milliseconds')).format(someFormat);
-}
-
 /**
  * E.g., "PT2M35S" -> "2m 35s"
  */
 export function formatDuration(duration: string) {
-  return durationFormat(moment.duration(duration), 'HH:mm:ss');
+  return moment.duration(duration).format('h[h] m[m] s[s]');
 }
 
 /**
@@ -62,7 +58,7 @@ export function durationToSeconds(duration: string) {
  * E.g, 155 -> "2:35"
  */
 export function secondsToMinuteMiles(secs: number) {
-  return durationFormat(moment.duration(secs, 'seconds'), 'm[m] s[s]');
+  return moment.duration(secs, 'seconds').format('m[m] s[s]');
 }
 
 /**

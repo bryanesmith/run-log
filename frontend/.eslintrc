@@ -1,5 +1,4 @@
 {
-    root: true,
     env: {
         browser: true,
         node: true,
@@ -10,10 +9,11 @@
         inject: true
     },
     parserOptions: {
+      ecmaVersion: 6,
       sourceType: "module",
-      ecmaVersion: 2018,
       ecmaFeatures: {
         modules: true,
+        experimentalObjectRestSpread: true,
         jsx: true
       }
     },
