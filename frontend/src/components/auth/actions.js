@@ -46,13 +46,32 @@ function receiveCheckSessionAction(ok) {
   };
 }
 
+// TODO: temporarily disabling sessions while migrating to serverless
+//       backend. Simulating services to provide read-only access to demo
+//       data.
+// export function checkSession() {
+//   return dispatch => {
+//     dispatch(sendCheckSessionAction());
+//     const url = `${config.baseUrl}/api/v1/session`;
+//     return fetch(url, {
+//       credentials: 'include',
+//     }).then(res => dispatch(receiveCheckSessionAction(res.ok)))
+//       .catch(() => dispatch(receiveCheckSessionAction(false)));
+//   };
+// }
+
+// Simulates 350ms request followed by authentication found
 export function checkSession() {
+  return simulateAsyncRequest(
+    sendCheckSessionAction(), receiveCheckSessionAction(true)
+  );
+}
+
+function simulateAsyncRequest(reqAction, resAction) {
   return dispatch => {
-    dispatch(sendCheckSessionAction());
-    const url = `${config.baseUrl}/api/v1/session`;
-    return fetch(url, {
-      credentials: 'include',
-    }).then(res => dispatch(receiveCheckSessionAction(res.ok)))
-      .catch(() => dispatch(receiveCheckSessionAction(false)));
+    dispatch(reqAction);
+    return new Promise(resolve => {
+      setTimeout(() => resolve(dispatch(resAction)), 350); // Simulate xhr
+    });
   };
 }
