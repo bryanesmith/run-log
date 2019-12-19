@@ -88,112 +88,10 @@ jobs:
           name: View web assets
           command: ls frontend/dist
       # TODO: Set up s3 bucket, if not exists, using Terraform
+      # TODO: Branch-specific s3 buckets
       - run:
           name: Sync web assets with S3
           command: aws s3 sync frontend/dist s3://${AWS_S3_BUCKET_NAME_WEB_ASSETS}
-
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  build_run_log_backend:
-
-    parameters:
-
-      sbt_version:
-        description: sbt version
-        type: string
-        default: 1.0.4
-
-      runlog_backend_version:
-        description: run_log version
-        type: string
-        default: 0.0.1-SNAPSHOT   # Specified in backend/build.sbt
-
-      scala_version:
-        description: Scala version
-        type: string
-        default: "2.12"           # Specified in backend/build.sbt
-
-    docker:
-      - image: openjdk:8
-
-    steps:
-      - checkout
-      - run:
-          name: Install sbt
-          command: |
-            apt update && apt install -y curl
-            curl -L -o sbt-<< parameters.sbt_version >>.deb https://dl.bintray.com/sbt/debian/sbt-<< parameters.sbt_version >>.deb
-            dpkg -i sbt-<< parameters.sbt_version >>.deb
-            rm sbt-<< parameters.sbt_version >>.deb
-            apt-get update
-            apt-get install -y sbt
-            apt-get clean && apt-get autoclean
-      - run:
-          name: Create backend configuration
-          command: |
-            BE_CONFIG=backend/src/main/resources/application.conf
-            cat \<<- EOF > "${BE_CONFIG}"
-            {
-              secret = "${BACKEND_SECRET_CONGIF_GUID}"
-            }
-            EOF
-            if [ ! -e "${BE_CONFIG}" ]; then
-              echo "File not found: ${BE_CONFIG}"
-              exit 1
-            fi
-      - run:
-          name: Run backend unit tests
-          command: echo "TODO"
-      - restore_cache:
-          key: ivy2-cache-{{ .Branch }}--{{ checksum "backend/build.sbt" }}
-      - run:
-          name: Build JAR
-          command: |
-            cd backend
-            sbt assembly
-            cd ..
-      - run:
-          name: Rename JAR
-          command: |
-            cp backend/target/scala-<< parameters.scala_version >>/run-log-assembly-<< parameters.runlog_backend_version >>.jar run-log.jar
-      - save_cache:
-          key: ivy2-cache-{{ .Branch }}--{{ checksum "backend/build.sbt" }}
-          paths:
-            - ~/.ivy2/cache
-      - persist_to_workspace:
-          root: .
-          paths:
-            - run-log.jar
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  deploy_run_log:
-
-    docker:
-      - image: openjdk:8
-
-    steps:
-      - add_ssh_keys:
-          fingerprints:
-            - "71:a6:69:31:f9:43:92:0e:42:4c:b0:cf:b4:03:ff:6e"
-      - attach_workspace:
-          at: .
-      - run:
-          name: Printing environment variables
-          command: |
-            echo PRODUCTION_SERVER_USER=$PRODUCTION_SERVER_USER
-            echo PRODUCTION_SERVER_DOMAIN=$PRODUCTION_SERVER_DOMAIN
-      - run:
-          name: Adding server to known_hosts
-          command: |
-            ssh-keygen -F ${PRODUCTION_SERVER_DOMAIN} >/dev/null || ssh-keyscan -H ${PRODUCTION_SERVER_DOMAIN} >> ~/.ssh/known_hosts
-      - run:
-          name: Deploying to server
-          command: |
-            scp run-log.jar ${PRODUCTION_SERVER_USER}@${PRODUCTION_SERVER_DOMAIN}:/home/ec2-user/run-log/run-log.latest.jar
-      - run:
-          name: Restarting server
-          command: |
-            ssh -f ${PRODUCTION_SERVER_USER}@${PRODUCTION_SERVER_DOMAIN} "sudo sh -c 'nohup /home/${PRODUCTION_SERVER_USER}/bin/restart-run-log > /dev/null 2>&1 &'"
 
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 workflows:
@@ -201,9 +99,3 @@ workflows:
   build_and_deploy_run_log:
     jobs:
       - build_run_log_frontend
-      - build_run_log_backend:
-          requires:
-            - build_run_log_frontend
-      - deploy_run_log:
-          requires:
-            - build_run_log_backend
