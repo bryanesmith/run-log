@@ -1,0 +1,109 @@
+openapi: '3.0.0'
+
+info:
+  version: '1.0.0'
+  title: "run-log"
+
+paths:
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  /production/api/v1/events:
+    get:
+      summary: "Get all events"
+      responses:
+        200:
+          description: "Successfully returning all events"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EventsPayload"
+    x-amazon-apigateway-integration:
+      uri: ${get_events_lambda_arn}
+      passthroughBehavior: "when_no_match"
+      httpMethod: "POST"
+      type: "aws_proxy"
+
+components:
+  schemas:
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    EventsPayload:
+      type: object
+      description: "Payload containing array of events"
+      properties:
+        events:
+          type: array
+          description: "The events being returned"
+          items:
+            $ref: "#/components/schemas/Event"
+      required:
+        - events
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    Event:
+      type: object
+      description: "An event."
+      properties:
+        "@type":
+          type: string
+          enum: [ Run, Run+CrossTrain, CrossTrain, ChangeShoes ]
+        "@id":
+          type: string
+        date:
+          type: string
+        run: # Polymorphic
+          oneOf:
+            - $ref: "#/components/schemas/Intervals"
+            - $ref: "#/components/schemas/SteadyStateRun"
+          discriminator:
+            propertyName: "@type"
+            mapping:
+              Intervals: Intervals
+              SteadyStateRun: SteadyStateRun
+        notes:
+          type: string
+      required:
+        - "@type"
+        - "@id"
+        - date
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    Intervals:
+      type: object
+      description: ""
+      properties:
+        "@type":
+          type: string
+        category:
+          type: string
+          enum: [ intervals, hills ]
+        distance:
+          type: number # TODO: double
+        duration:
+          type: string
+      required:
+        - "@type"
+        - category
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    SteadyStateRun:
+      type: object
+      description: ""
+      properties:
+        "@type":
+          type: string
+        category:
+          type: string
+          enum: [casual, speed, distance ]
+        count:
+          type: integer
+        intervalDuration:
+          type: string
+        intervalSpeed:
+          type: number # TODO: double
+        restDuration:
+          type: string
+      required:
+        - "@type"
+        - category
+        - count
