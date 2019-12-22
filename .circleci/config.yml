@@ -162,25 +162,24 @@ jobs:
       - run:
           name: Initialize Terraform
           command: |
-            ( # subshell to avoid changing working directory
-              cd terraform
-              echo $PATH  # DEBUG:
-              terraform init \
-                -backend-config="bucket=${AWS_S3_BUCKET_NAME_STAGING_ASSETS}" \
-                -backend-config="region=<< parameters.aws_region >>"
-            )
+            cd terraform
+            echo $PATH  # DEBUG:
+            terraform init \
+              -backend-config="bucket=${AWS_S3_BUCKET_NAME_STAGING_ASSETS}" \
+              -backend-config="region=<< parameters.aws_region >>"
+            cd ..
 
       - run:
           name: Apply Terraform changes
           command: |
-            ( # subshell to avoid changing working directory
-              cd terraform
-              terraform apply -auto-approve \
-                -var="dynamodb_table=${AWS_DYNAMODB_TABLE_NAME}" \
-                -var="s3_bucket_stage_assets=${AWS_S3_BUCKET_NAME_STAGING_ASSETS}" \
-                -var="run_log_version=<< parameters.run_log_version >>" \
-                -var="aws_region=<< parameters.aws_region >>"
-            )
+            cd terraform
+            echo $PATH  # DEBUG:
+            terraform apply -auto-approve \
+              -var="dynamodb_table=${AWS_DYNAMODB_TABLE_NAME}" \
+              -var="s3_bucket_stage_assets=${AWS_S3_BUCKET_NAME_STAGING_ASSETS}" \
+              -var="run_log_version=<< parameters.run_log_version >>" \
+              -var="aws_region=<< parameters.aws_region >>"
+            cd ..
 
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 workflows:
