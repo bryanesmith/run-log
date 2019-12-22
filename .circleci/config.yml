@@ -15,7 +15,7 @@ jobs:
       run_log_version:
         description: Version of run-log
         type: string
-        default: 1.0.0
+        default: "1.0.0"
 
       python_version:
         description: Python version
@@ -25,12 +25,17 @@ jobs:
       yarn_version:
         description: Yarn version
         type: string
-        default: 0.27.5
+        default: "0.27.5"
 
       aws_region:
         description: AWS region
         type: string
         default: "us-east-1"
+
+      tf_version:
+        description: Terraform version
+        type: string
+        default: "v0.12.18"
 
     docker:
       - image: circleci/python:<< parameters.python_version >>-node
@@ -61,6 +66,14 @@ jobs:
       - run:
           name: Install AWS CLI
           command: pip3 install awscli --user
+      - run:
+          name: Install Terraform
+          command: |
+            export tf_version=<<parameters.tf_version>>
+            git clone https://github.com/tfutils/tfenv ~/.tfenv
+            export PATH="$HOME/.tfenv/bin:$PATH"
+            tfenv install $tf_version
+            tfenv use $tf_version
       - checkout    # Must checkout before create files/directories
       - run:
           name: Creating build directory
