@@ -35,7 +35,7 @@ jobs:
       tf_version:
         description: Terraform version
         type: string
-        default: "v0.12.18"
+        default: "0.12.18"
 
     docker:
       - image: circleci/python:<< parameters.python_version >>-node
