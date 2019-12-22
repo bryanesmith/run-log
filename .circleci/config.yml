@@ -55,7 +55,7 @@ jobs:
             FE_CONFIG=frontend/src/config.json
             cat \<<- EOF > "${FE_CONFIG}"
             {
-              "baseUrl": "${PRODUCTION_SERVER_BASE_URL}"
+              "baseUrl": "${PRODUCTION_API_SERVER_BASE_URL}"
             }
             EOF
             if [ ! -e "${FE_CONFIG}" ]; then

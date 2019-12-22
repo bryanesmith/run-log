@@ -44,20 +44,22 @@ Steps:
 
 1. Create an S3 bucket for staging AWS assets for purposes of building and deploying
 
+1. Review `Terraform/variables.tf`, and change any other relevant values
+
+1. Clone this repository in GitHub
+
+1. In CircleCI, go to "Add Projects"
+  - Find "run-log", and click "Set Up Project"
+  - This may initiate a build that fails, which is expected
+
 1. In Circle CI "Jobs" > "run-log" (click gear icon) > "Environment Variables", add the following variables:
   - `AWS_ACCESS_KEY_ID`: the "Access key ID" for the IAM user you created
   - `AWS_S3_BUCKET_NAME_STAGING_ASSETS`: the name of the bucket you created above for hosting the staged assets (do _not_ include "`s3://`" prefix!)
   - `AWS_S3_BUCKET_NAME_WEB_HOST`: the name of the bucket you created above for hosting the static web resources (do _not_ include "`s3://`" prefix!)
   - `AWS_SECRET_ACCESS_KEY`: the secret key for the IAM user you created
-  - `PRODUCTION_SERVER_BASE_URL`: e.g., "http://run-log.bryanesmith.com/production"
+  - `PRODUCTION_API_SERVER_BASE_URL`: e.g., "https://abc123.execute-api.us-east-1.amazonaws.com/production"
 
-1. Review `Terraform/variables.tf`, and change any relevant values
-
-1. Clone this repository
-
-1. In CircleCI, go to "Add Projects"
-  - Find "run-log", and click "Set Up Project"
-  - Should start build and deployment process
+1. Whenever you push any commits to GitHub, you will trigger a new CI/CD execution in CircleCI
 
 ## Screenshots
 
