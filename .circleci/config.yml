@@ -54,16 +54,6 @@ jobs:
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       # Install dependencies, prepare environment
       - run:
-          name: Debugging
-          command: |
-            npm -v
-            node -v
-      - run:
-          name: Install Yarn
-          command: |
-            curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version << parameters.yarn_version >>
-            yarn -v
-      - run:
           name: Install AWS CLI
           command: pip3 install awscli --user
       - checkout    # Must checkout before create files/directories
@@ -132,6 +122,12 @@ jobs:
           name: Build frontend
           command: |
             ( # subshell to avoid changing working directory
+
+              ### install yarn
+              curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version << parameters.yarn_version >>
+              yarn -v
+
+              ### Run yarn to build frontend
               cd frontend
               yarn && yarn build
             )
