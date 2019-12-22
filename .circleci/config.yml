@@ -8,10 +8,14 @@ version: 2.1
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 jobs:
 
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   build_and_deploy_run_log_job:
 
     parameters:
+
+      run_log_version:
+        description: Version of run-log
+        type: string
+        default: 1.0.0
 
       python_version:
         description: Python version
@@ -35,6 +39,15 @@ jobs:
       - AWS_DEFAULT_REGION: << parameters.aws_region >>
 
     steps:
+
+      #
+      # NOTE: Could break these sections into separate jobs. However, this would
+      #       incur around 15+ second overhead per job for spinning up environment
+      #       and installing AWS CLI.
+      #
+
+      # - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+      # Install dependencies, prepare environment
       - run:
           name: Debugging
           command: |
@@ -48,7 +61,48 @@ jobs:
       - run:
           name: Install AWS CLI
           command: pip3 install awscli --user
+      - run:
+          name: Creating build directory
+          command:
+            if [ ! -e ".build" ]; then
+              mkdir .build
+            fi
       - checkout
+
+      # - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+      # Bundle and stage lambdas
+      - run:
+          name: Bundle lambdas
+          command: |
+            #
+            # Changing directory instead of use relative paths to avoid using
+            #   both -r and -j together, which breaks if add subdirectories
+            #   to lambdas in future
+            #
+            ( # subshell to avoid changing working directory
+              cd backend/src/lambdas
+              for Lambda in `ls`; do
+                cd "${Lambda}"
+                Zip="${Lambda}.zip"
+                echo "Creating: ${Zip}"
+                zip -r "${ROOT_DIR}/.build/${Zip}" "."
+                cd ..
+              done
+            )
+      - run:
+          name: Deploying lambdas
+          command: |
+            ( # subshell to avoid changing working directory
+              cd .build
+              for LambdaZip in `ls *.zip`; do
+                echo "Deploying: $LambdaZip"
+                aws s3 cp "${LambdaZip}" "s3://run-log.bryanesmith.com-staging-assets/1.0.0/${LambdaZip}"
+                # aws s3 cp "${LambdaZip}" "s3://${AWS_S3_BUCKET_NAME_STAGING_ASSETS}/<< parameters.run_log_version >>/${LambdaZip}"
+              done
+            )
+
+      # - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+      # Build and deploy static web assets
       - run:
           name: Create frontend configuration
           command: |
@@ -70,9 +124,10 @@ jobs:
       - run:
           name: Build frontend
           command: |
-            cd frontend
-            yarn && yarn build
-            cd ..
+            ( # subshell to avoid changing working directory
+              cd frontend
+              yarn && yarn build
+            )
       - save_cache:
           key: npm-cache-{{ .Branch }}-v4--{{ checksum "frontend/package.json" }}
           paths:
@@ -85,6 +140,9 @@ jobs:
       - run:
           name: Sync web assets with S3
           command: aws s3 sync frontend/dist s3://${AWS_S3_BUCKET_NAME_WEB_HOST}
+
+      # - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+      # Provision other infrastructure and deploy backend
 
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 workflows:
