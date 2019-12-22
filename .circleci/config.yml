@@ -63,7 +63,7 @@ jobs:
           command: pip3 install awscli --user
       - run:
           name: Creating build directory
-          command:
+          command: |
             if [ ! -e ".build" ]; then
               mkdir .build
             fi
