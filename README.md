@@ -44,8 +44,6 @@ Steps:
 
 1. Create an S3 bucket for staging AWS assets for purposes of building and deploying
 
-1. Review `Terraform/variables.tf`, and change any other relevant values
-
 1. Clone this repository in GitHub
 
 1. In CircleCI, go to "Add Projects"
@@ -54,8 +52,12 @@ Steps:
 
 1. In Circle CI "Jobs" > "run-log" (click gear icon) > "Environment Variables", add the following variables:
   - `AWS_ACCESS_KEY_ID`: the "Access key ID" for the IAM user you created
-  - `AWS_S3_BUCKET_NAME_STAGING_ASSETS`: the name of the bucket you created above for hosting the staged assets (do _not_ include "`s3://`" prefix!)
-  - `AWS_S3_BUCKET_NAME_WEB_HOST`: the name of the bucket you created above for hosting the static web resources (do _not_ include "`s3://`" prefix!)
+  - `AWS_DYNAMODB_TABLE_NAME`: name for the DynamoDB table
+    - **Note**: table must not exist already, or else you will need to manually import it into Terraform state.
+  - `AWS_S3_BUCKET_NAME_STAGING_ASSETS`: the name of the bucket you created above for hosting the staged assets
+    - **Note**: do _not_ include "`s3://`" prefix
+  - `AWS_S3_BUCKET_NAME_WEB_HOST`: the name of the bucket you created above for hosting the static web resources
+    - **Note**: do _not_ include "`s3://`" prefix
   - `AWS_SECRET_ACCESS_KEY`: the secret key for the IAM user you created
   - `PRODUCTION_API_SERVER_BASE_URL`: e.g., "https://abc123.execute-api.us-east-1.amazonaws.com/production"
 
