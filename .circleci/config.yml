@@ -80,6 +80,7 @@ jobs:
             #   to lambdas in future
             #
             ( # subshell to avoid changing working directory
+              ROOT_DIR=`pwd`
               cd backend/src/lambdas
               for Lambda in `ls`; do
                 cd "${Lambda}"
