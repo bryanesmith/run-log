@@ -60,6 +60,8 @@ components:
             mapping:
               Intervals: Intervals
               SteadyStateRun: SteadyStateRun
+        favorite:
+          type: boolean
         notes:
           type: string
       required:
