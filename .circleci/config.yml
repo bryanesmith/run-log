@@ -61,13 +61,13 @@ jobs:
       - run:
           name: Install AWS CLI
           command: pip3 install awscli --user
+      - checkout    # Must checkout before create files/directories
       - run:
           name: Creating build directory
           command: |
             if [ ! -e ".build" ]; then
               mkdir .build
             fi
-      - checkout
 
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       # Bundle and stage lambdas
