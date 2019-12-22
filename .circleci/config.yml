@@ -1,22 +1,15 @@
 version: 2.1
 
 #
-# REQUIRED ENVIRONMENT VARIABLES:
-# In Jobs > run-log settings (gear icon) > Environment Variables, set up:
-#
-#   - AWS_ACCESS_KEY_ID
-#   - AWS_S3_BUCKET_NAME_WEB_ASSETS
-#   - AWS_SECRET_ACCESS_KEY
-#   - BACKEND_SECRET_CONGIF_GUID
-#   - PRODUCTION_SERVER_DOMAIN
-#   - PRODUCTION_SERVER_USER
+# For description of required environment variables, see "Setup" in
+#   README.md
 #
 
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 jobs:
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  build_run_log_frontend:
+  build_and_deploy_run_log_job:
 
     parameters:
 
@@ -62,7 +55,7 @@ jobs:
             FE_CONFIG=frontend/src/config.json
             cat \<<- EOF > "${FE_CONFIG}"
             {
-              "baseUrl": "${PRODUCTION_SERVER_DOMAIN}"
+              "baseUrl": "${PRODUCTION_SERVER_BASE_URL}"
             }
             EOF
             if [ ! -e "${FE_CONFIG}" ]; then
@@ -91,11 +84,11 @@ jobs:
       # TODO: Branch-specific s3 buckets
       - run:
           name: Sync web assets with S3
-          command: aws s3 sync frontend/dist s3://${AWS_S3_BUCKET_NAME_WEB_ASSETS}
+          command: aws s3 sync frontend/dist s3://${AWS_S3_BUCKET_NAME_WEB_HOST}
 
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 workflows:
   version: 2
-  build_and_deploy_run_log:
+  build_and_deploy_run_log_workflow:
     jobs:
-      - build_run_log_frontend
+      - build_and_deploy_run_log_job
