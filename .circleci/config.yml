@@ -74,6 +74,8 @@ jobs:
             export PATH="$HOME/.tfenv/bin:$PATH"
             tfenv install $tf_version
             tfenv use $tf_version
+            ls ~/.tfenv/bin/
+            echo $PATH  # DEBUG:
       - checkout    # Must checkout before create files/directories
       - run:
           name: Creating build directory
@@ -162,6 +164,7 @@ jobs:
           command: |
             ( # subshell to avoid changing working directory
               cd terraform
+              echo $PATH  # DEBUG:
               terraform init \
                 -backend-config="bucket=${AWS_S3_BUCKET_NAME_STAGING_ASSETS}" \
                 -backend-config="region=<< parameters.aws_region >>"
