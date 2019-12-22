@@ -79,13 +79,14 @@ jobs:
       - run:
           name: Bundle lambdas
           command: |
-            #
-            # Changing directory instead of use relative paths to avoid using
-            #   both -r and -j together, which breaks if add subdirectories
-            #   to lambdas in future
-            #
             ( # subshell to avoid changing working directory
               ROOT_DIR=`pwd`
+
+              #
+              # Changing directory instead of use relative paths to avoid using
+              #   both -r and -j together, which breaks if add subdirectories
+              #   to lambdas in future
+              #
               cd backend/src/lambdas
               for Lambda in `ls`; do
                 cd "${Lambda}"
@@ -150,13 +151,6 @@ jobs:
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       # Provision other infrastructure and deploy backend
       - run:
-          name: Initialize Terraform
-          command: |
-            cd terraform
-            echo $PATH  # DEBUG:
-
-
-      - run:
           name: Apply Terraform changes
           command: |
             ( # subshell to avoid changing working directory
@@ -167,15 +161,13 @@ jobs:
               export PATH="$HOME/.tfenv/bin:$PATH"
               tfenv install $tf_version
               tfenv use $tf_version
-              ls ~/.tfenv/bin/
-              echo $PATH  # DEBUG:
 
               #### execute Terraform
               cd terraform
               terraform init \
                 -backend-config="bucket=${AWS_S3_BUCKET_NAME_STAGING_ASSETS}" \
                 -backend-config="region=<< parameters.aws_region >>"
-              
+
               terraform apply -auto-approve \
                 -var="dynamodb_table=${AWS_DYNAMODB_TABLE_NAME}" \
                 -var="s3_bucket_stage_assets=${AWS_S3_BUCKET_NAME_STAGING_ASSETS}" \
