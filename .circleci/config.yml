@@ -135,13 +135,20 @@ jobs:
       - run:
           name: Export variables from Terraform
           command: |
-            echo "export PRODUCTION_API_SERVER_BASE_URL=`terraform output api-gateway-url`" >> $BASH_ENV
+            export PRODUCTION_API_SERVER_BASE_URL=`terraform output api-gateway-url`
+            echo "PRODUCTION_API_SERVER_BASE_URL=$PRODUCTION_API_SERVER_BASE_URL" >> $BASH_ENV
+
+            echo "DEBUG: PRODUCTION_API_SERVER_BASE_URL=$PRODUCTION_API_SERVER_BASE_URL"
+            cat $BASH_ENV
 
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       # Build and deploy static web assets
       - run:
           name: Create frontend configuration
           command: |
+            echo "DEBUG: PRODUCTION_API_SERVER_BASE_URL=$PRODUCTION_API_SERVER_BASE_URL"
+            cat $BASH_ENV
+            
             FE_CONFIG=frontend/src/config.json
             cat \<<- EOF > "${FE_CONFIG}"
             {
