@@ -46,8 +46,6 @@ Steps:
     - This may initiate a build that fails, which is expected
 7. In Circle CI "Jobs" > "run-log" (click gear icon) > "Environment Variables", add the following variables:
     - `AWS_ACCESS_KEY_ID`: the "Access key ID" for the IAM user you created
-    - `AWS_CORS_ALLOWED_ORIGINS`: comma-separated list of domains serving web resources permitted to access resource
-        - E.g., `http://localhost:8080,http://run-log.bryanesmith.com`
     - `AWS_DYNAMODB_TABLE_NAME`: name for the DynamoDB table
         - **Note**: table must not exist already, or else you will need to manually import it into Terraform state.
     - `AWS_S3_BUCKET_NAME_STAGING_ASSETS`: the name of the bucket you created above for hosting the staged assets
@@ -55,6 +53,8 @@ Steps:
     - `AWS_S3_BUCKET_NAME_WEB_HOST`: the name of the bucket you created above for hosting the static web resources
         - **Note**: do _not_ include "`s3://`" prefix
     - `AWS_SECRET_ACCESS_KEY`: the secret key for the IAM user you created
+    - `CORS_ALLOWED_ORIGINS`: comma-separated list of domains serving web resources permitted to access resource
+        - E.g., `http://localhost:8080,http://run-log.bryanesmith.com`
     - `PRODUCTION_API_SERVER_BASE_URL`: e.g., "https://abc123.execute-api.us-east-1.amazonaws.com/production"
 8. Whenever you push any commits to GitHub, you will trigger a new CI/CD execution in CircleCI
 
