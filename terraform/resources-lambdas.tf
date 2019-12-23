@@ -2,7 +2,7 @@
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 resource "aws_iam_role" "run-log-lambda-role" {
   name = "RunLogLambdaRole"
-
+  tags = var.common_tags
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -79,6 +79,7 @@ resource "aws_lambda_function" "run-log-get-events-lambda" {
   runtime = "python3.7"
   s3_bucket = var.s3_bucket_stage_assets
   s3_key = "${var.run_log_version}/RunLogGetEvents.zip"
+  tags = var.common_tags
 
   environment {
     variables = {
