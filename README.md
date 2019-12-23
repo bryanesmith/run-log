@@ -46,6 +46,8 @@ Steps:
     - This may initiate a build that fails, which is expected
 7. In Circle CI "Jobs" > "run-log" (click gear icon) > "Environment Variables", add the following variables:
     - `AWS_ACCESS_KEY_ID`: the "Access key ID" for the IAM user you created
+    - `AWS_CORS_ALLOWED_ORIGINS`: comma-separated list of domains serving web resources permitted to access resource
+        - E.g., `http://localhost:8080,http://run-log.bryanesmith.com`
     - `AWS_DYNAMODB_TABLE_NAME`: name for the DynamoDB table
         - **Note**: table must not exist already, or else you will need to manually import it into Terraform state.
     - `AWS_S3_BUCKET_NAME_STAGING_ASSETS`: the name of the bucket you created above for hosting the staged assets
