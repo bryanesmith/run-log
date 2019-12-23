@@ -16,6 +16,8 @@ data "template_file" "run-log-swagger" {
   }
 }
 
+# Deployments
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 resource "aws_api_gateway_deployment" "run-log-api-gateway-deployment" {
   rest_api_id = aws_api_gateway_rest_api.run-log-api-gateway.id
   stage_name  = var.environment
