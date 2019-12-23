@@ -55,7 +55,6 @@ Steps:
     - `AWS_SECRET_ACCESS_KEY`: the secret key for the IAM user you created
     - `CORS_ALLOWED_ORIGINS`: comma-separated list of domains serving web resources permitted to access resource
         - E.g., `http://localhost:8080,http://run-log.bryanesmith.com`
-    - `PRODUCTION_API_SERVER_BASE_URL`: e.g., "https://abc123.execute-api.us-east-1.amazonaws.com/production"
 8. Whenever you push any commits to GitHub, you will trigger a new CI/CD execution in CircleCI
 
 ## Screenshots

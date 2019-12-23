@@ -56,6 +56,14 @@ jobs:
       - run:
           name: Install AWS CLI
           command: pip3 install awscli --user
+      - run:
+          name: Install Terraform
+          command: |
+            export tf_version=<<parameters.tf_version>>
+            git clone https://github.com/tfutils/tfenv ~/.tfenv
+            export PATH="$HOME/.tfenv/bin:$PATH"
+            tfenv install $tf_version
+            tfenv use $tf_version
       - checkout    # Must checkout before create files/directories
       - run:
           name: Creating build directory
@@ -97,6 +105,28 @@ jobs:
                 # aws s3 cp "${LambdaZip}" "s3://${AWS_S3_BUCKET_NAME_STAGING_ASSETS}/<< parameters.run_log_version >>/${LambdaZip}"
               done
             )
+
+      # - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+      # Provision infrastructure and deploy backend
+      - run:
+          name: Apply Terraform changes
+          command: |
+            cd terraform
+
+            terraform init \
+              -backend-config="bucket=${AWS_S3_BUCKET_NAME_STAGING_ASSETS}" \
+              -backend-config="region=<< parameters.aws_region >>"
+
+            terraform apply -auto-approve \
+              -var="aws_region=<< parameters.aws_region >>" \
+              -var="cors_allowed_origins=${CORS_ALLOWED_ORIGINS}" \
+              -var="dynamodb_table=${AWS_DYNAMODB_TABLE_NAME}" \
+              -var="run_log_version=<< parameters.run_log_version >>" \
+              -var="s3_bucket_stage_assets=${AWS_S3_BUCKET_NAME_STAGING_ASSETS}"
+
+            export PRODUCTION_API_SERVER_BASE_URL=`terraform output api-gateway-url`
+
+            cd .. # yuck
 
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       # Build and deploy static web assets
@@ -143,34 +173,6 @@ jobs:
       - run:
           name: Sync web assets with S3
           command: aws s3 sync frontend/dist s3://${AWS_S3_BUCKET_NAME_WEB_HOST}
-
-      # - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-      # Provision other infrastructure and deploy backend
-      - run:
-          name: Apply Terraform changes
-          command: |
-            ( # subshell to avoid changing working directory
-
-              ### install Terraform
-              export tf_version=<<parameters.tf_version>>
-              git clone https://github.com/tfutils/tfenv ~/.tfenv
-              export PATH="$HOME/.tfenv/bin:$PATH"
-              tfenv install $tf_version
-              tfenv use $tf_version
-
-              #### execute Terraform
-              cd terraform
-              terraform init \
-                -backend-config="bucket=${AWS_S3_BUCKET_NAME_STAGING_ASSETS}" \
-                -backend-config="region=<< parameters.aws_region >>"
-
-              terraform apply -auto-approve \
-                -var="aws_region=<< parameters.aws_region >>" \
-                -var="cors_allowed_origins=${CORS_ALLOWED_ORIGINS}" \
-                -var="dynamodb_table=${AWS_DYNAMODB_TABLE_NAME}" \
-                -var="run_log_version=<< parameters.run_log_version >>" \
-                -var="s3_bucket_stage_assets=${AWS_S3_BUCKET_NAME_STAGING_ASSETS}"
-            )
 
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 workflows:

@@ -7,7 +7,7 @@ info:
 paths:
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  /production/api/v1/events:
+  /api/v1/events:
     get:
       summary: "Get all events"
       responses:
@@ -17,11 +17,11 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/EventsPayload"
-    x-amazon-apigateway-integration:
-      uri: ${get_events_lambda_arn}
-      passthroughBehavior: "when_no_match"
-      httpMethod: "POST"
-      type: "aws_proxy"
+      x-amazon-apigateway-integration:
+        uri: ${get_events_lambda_arn}
+        passthroughBehavior: "when_no_match"
+        httpMethod: "POST"
+        type: "aws_proxy"
 
 components:
   schemas:
@@ -55,11 +55,15 @@ components:
           oneOf:
             - $ref: "#/components/schemas/Intervals"
             - $ref: "#/components/schemas/SteadyStateRun"
-          discriminator:
-            propertyName: "@type"
-            mapping:
-              Intervals: Intervals
-              SteadyStateRun: SteadyStateRun
+          #
+          # Not supported by AWS as of 2019/12/13
+          #
+
+          #discriminator:
+          #  propertyName: "@type"
+          #  mapping:
+          #    Intervals: Intervals
+          #    SteadyStateRun: SteadyStateRun
         favorite:
           type: boolean
         notes:
