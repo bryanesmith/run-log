@@ -65,18 +65,8 @@ jobs:
             # Export for sake of current shell
             export PATH=$HOME/.tfenv/bin:$PATH
 
-            # DEBUG
-            echo $PATH
-            echo $BASH_ENV
-            #cat $BASH_ENV # Doesn't exist yet
-
             # Export for sake of future shells (other steps)
             echo "export PATH=$PATH" >> $BASH_ENV
-
-            # DEBUG
-            echo $PATH
-            echo $BASH_ENV
-            cat $BASH_ENV
 
             tfenv install $tf_version
             tfenv use $tf_version
@@ -127,27 +117,25 @@ jobs:
       - run:
           name: Apply Terraform changes
           command: |
-            # DEBUG
-            echo $PATH
-            echo $BASH_ENV
-            cat $BASH_ENV
+            ( # subshell to avoid changing working directory
+              cd terraform
 
-            cd terraform
+              terraform init \
+                -backend-config="bucket=${AWS_S3_BUCKET_NAME_STAGING_ASSETS}" \
+                -backend-config="region=<< parameters.aws_region >>"
 
-            terraform init \
-              -backend-config="bucket=${AWS_S3_BUCKET_NAME_STAGING_ASSETS}" \
-              -backend-config="region=<< parameters.aws_region >>"
+              terraform apply -auto-approve \
+                -var="aws_region=<< parameters.aws_region >>" \
+                -var="cors_allowed_origins=${CORS_ALLOWED_ORIGINS}" \
+                -var="dynamodb_table=${AWS_DYNAMODB_TABLE_NAME}" \
+                -var="run_log_version=<< parameters.run_log_version >>" \
+                -var="s3_bucket_stage_assets=${AWS_S3_BUCKET_NAME_STAGING_ASSETS}"
+            )
 
-            terraform apply -auto-approve \
-              -var="aws_region=<< parameters.aws_region >>" \
-              -var="cors_allowed_origins=${CORS_ALLOWED_ORIGINS}" \
-              -var="dynamodb_table=${AWS_DYNAMODB_TABLE_NAME}" \
-              -var="run_log_version=<< parameters.run_log_version >>" \
-              -var="s3_bucket_stage_assets=${AWS_S3_BUCKET_NAME_STAGING_ASSETS}"
-
-            export PRODUCTION_API_SERVER_BASE_URL=`terraform output api-gateway-url`
-
-            cd .. # yuck
+      - run:
+          name: Export variables from Terraform
+          command: |
+            echo "export PRODUCTION_API_SERVER_BASE_URL=`terraform output api-gateway-url`" >> $BASH_ENV
 
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       # Build and deploy static web assets
