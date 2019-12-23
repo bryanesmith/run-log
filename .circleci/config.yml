@@ -61,7 +61,8 @@ jobs:
           command: |
             export tf_version=<<parameters.tf_version>>
             git clone https://github.com/tfutils/tfenv ~/.tfenv
-            echo 'export PATH=$HOME/.tfenv/bin:$PATH' >> $BASH_ENV
+            export PATH=$HOME/.tfenv/bin:$PATH      # Export for sake of current shell
+            echo 'export PATH=$PATH' >> $BASH_ENV   # Export for sake of future shells (other steps)
             tfenv install $tf_version
             tfenv use $tf_version
       - checkout    # Must checkout before create files/directories
