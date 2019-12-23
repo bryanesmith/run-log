@@ -120,6 +120,7 @@ jobs:
             ( # subshell to avoid changing working directory
               cd terraform
 
+              # Apply changes
               terraform init \
                 -backend-config="bucket=${AWS_S3_BUCKET_NAME_STAGING_ASSETS}" \
                 -backend-config="region=<< parameters.aws_region >>"
@@ -130,16 +131,14 @@ jobs:
                 -var="dynamodb_table=${AWS_DYNAMODB_TABLE_NAME}" \
                 -var="run_log_version=<< parameters.run_log_version >>" \
                 -var="s3_bucket_stage_assets=${AWS_S3_BUCKET_NAME_STAGING_ASSETS}"
+
+              # Export variables
+              export PRODUCTION_API_SERVER_BASE_URL=`terraform output api-gateway-url`
+              echo "PRODUCTION_API_SERVER_BASE_URL=$PRODUCTION_API_SERVER_BASE_URL" >> $BASH_ENV
+
+              echo "DEBUG: PRODUCTION_API_SERVER_BASE_URL=$PRODUCTION_API_SERVER_BASE_URL"
+              cat $BASH_ENV
             )
-
-      - run:
-          name: Export variables from Terraform
-          command: |
-            export PRODUCTION_API_SERVER_BASE_URL=`terraform output api-gateway-url`
-            echo "PRODUCTION_API_SERVER_BASE_URL=$PRODUCTION_API_SERVER_BASE_URL" >> $BASH_ENV
-
-            echo "DEBUG: PRODUCTION_API_SERVER_BASE_URL=$PRODUCTION_API_SERVER_BASE_URL"
-            cat $BASH_ENV
 
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       # Build and deploy static web assets
@@ -148,7 +147,7 @@ jobs:
           command: |
             echo "DEBUG: PRODUCTION_API_SERVER_BASE_URL=$PRODUCTION_API_SERVER_BASE_URL"
             cat $BASH_ENV
-            
+
             FE_CONFIG=frontend/src/config.json
             cat \<<- EOF > "${FE_CONFIG}"
             {
