@@ -61,8 +61,22 @@ jobs:
           command: |
             export tf_version=<<parameters.tf_version>>
             git clone https://github.com/tfutils/tfenv ~/.tfenv
-            export PATH=$HOME/.tfenv/bin:$PATH      # Export for sake of current shell
-            echo 'export PATH=$PATH' >> $BASH_ENV   # Export for sake of future shells (other steps)
+
+            # Export for sake of current shell
+            export PATH=$HOME/.tfenv/bin:$PATH
+
+            # DEBUG
+            echo $PATH
+            echo $BASH_ENV
+            cat $BASH_ENV
+
+            # Export for sake of future shells (other steps)
+            echo 'export PATH=$PATH' >> $BASH_ENV
+
+            # DEBUG
+            echo $BASH_ENV
+            cat $BASH_ENV
+
             tfenv install $tf_version
             tfenv use $tf_version
       - checkout    # Must checkout before create files/directories
@@ -112,6 +126,11 @@ jobs:
       - run:
           name: Apply Terraform changes
           command: |
+            # DEBUG
+            echo $PATH
+            echo $BASH_ENV
+            cat $BASH_ENV
+
             cd terraform
 
             terraform init \
