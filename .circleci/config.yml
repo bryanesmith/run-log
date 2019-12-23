@@ -135,9 +135,6 @@ jobs:
               # Export variables
               export PRODUCTION_API_SERVER_BASE_URL=`terraform output api-gateway-url`
               echo "PRODUCTION_API_SERVER_BASE_URL=$PRODUCTION_API_SERVER_BASE_URL" >> $BASH_ENV
-
-              echo "DEBUG: PRODUCTION_API_SERVER_BASE_URL=$PRODUCTION_API_SERVER_BASE_URL"
-              cat $BASH_ENV
             )
 
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -145,9 +142,6 @@ jobs:
       - run:
           name: Create frontend configuration
           command: |
-            echo "DEBUG: PRODUCTION_API_SERVER_BASE_URL=$PRODUCTION_API_SERVER_BASE_URL"
-            cat $BASH_ENV
-
             FE_CONFIG=frontend/src/config.json
             cat \<<- EOF > "${FE_CONFIG}"
             {
