@@ -68,12 +68,13 @@ jobs:
             # DEBUG
             echo $PATH
             echo $BASH_ENV
-            cat $BASH_ENV
+            #cat $BASH_ENV # Doesn't exist yet
 
             # Export for sake of future shells (other steps)
             echo 'export PATH=$PATH' >> $BASH_ENV
 
             # DEBUG
+            echo $PATH
             echo $BASH_ENV
             cat $BASH_ENV
 
