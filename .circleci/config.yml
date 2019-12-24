@@ -81,7 +81,7 @@ jobs:
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       # Provision staging infrastructure
       - run:
-          name: Apply Terraform changes
+          name: Provision staging infrastructure with Terraform
           command: |
             ( # subshell to avoid changing working directory
               cd terraform/staging
@@ -133,10 +133,10 @@ jobs:
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       # Provision web infrastructure and deploy backend
       - run:
-          name: Apply Terraform changes
+          name: Provision web infrastructure with Terraform
           command: |
             ( # subshell to avoid changing working directory
-              cd terraform/infrastructure
+              cd terraform/web
 
               # Apply changes
               terraform init \
