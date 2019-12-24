@@ -1,14 +1,11 @@
 #
-# TODO: Duplication with /terraform/staging/variables.tf
+# TODO: Duplication with /terraform/infrastructure/variables.tf
 #
 
 # Required
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 variable "aws_region"               {}
-variable "cors_allowed_origins"     {}
-variable "dynamodb_table"           {}
-variable "run_log_version"          {}
-variable "s3_bucket_stage_assets"   {}
+variable "staging_bucket_name"      {}
 
 # Optional
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -18,7 +15,4 @@ variable "common_tags"              {
     Environment = "production" # TODO: duplicates var.environment
     ManagedBy = "Terraform"
   }
-}
-variable "environment"              {
-  default = "production"
 }

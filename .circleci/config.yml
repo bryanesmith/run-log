@@ -79,6 +79,24 @@ jobs:
             fi
 
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+      # Provision staging infrastructure
+      - run:
+          name: Apply Terraform changes
+          command: |
+            ( # subshell to avoid changing working directory
+              cd terraform/staging
+
+              # Apply changes
+              terraform init \
+                -backend-config="bucket=${AWS_S3_BUCKET_NAME_STAGING_ASSETS}" \
+                -backend-config="region=<< parameters.aws_region >>"
+
+              terraform apply -auto-approve \
+                -var="aws_region=<< parameters.aws_region >>" \
+                -var="staging_bucket_name=${AWS_S3_BUCKET_NAME_STAGING_ASSETS}"
+            )
+
+      # - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       # Bundle and stage lambdas
       - run:
           name: Bundle lambdas
@@ -113,7 +131,7 @@ jobs:
             )
 
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-      # Provision infrastructure and deploy backend
+      # Provision web infrastructure and deploy backend
       - run:
           name: Apply Terraform changes
           command: |
