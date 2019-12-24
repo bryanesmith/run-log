@@ -118,7 +118,7 @@ jobs:
           name: Apply Terraform changes
           command: |
             ( # subshell to avoid changing working directory
-              cd terraform
+              cd terraform/infrastructure
 
               # Apply changes
               terraform init \

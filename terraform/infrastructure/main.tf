@@ -5,6 +5,6 @@ provider "aws" {
 terraform {
   backend "s3" {
     # Must specify bucket, region via `terraform init` command-line params
-    key    = "terraform/terraform.tfstate"
+    key    = "terraform/infrastructure/terraform.tfstate"
   }
 }
