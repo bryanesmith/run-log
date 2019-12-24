@@ -38,6 +38,20 @@ Steps:
         - E.g., `http://localhost:8080,http://run-log.bryanesmith.com`
 6. Whenever you push any commits to GitHub, you will trigger a new CI/CD execution in CircleCI
 
+The URL to your CloudFront distribution is available in the output of step **Provision web infrastructure with Terraform**. Look for:
+
+```
+...
+
+Outputs:
+
+...
+distribution-url = xxxxxxxxxxxxxx.cloudfront.net
+...
+```
+
+The url for your instance will be `https://xxxxxxxxxxxxxx.cloudfront.net`.
+
 ## Screenshots
 
 ### Login Screen
