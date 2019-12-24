@@ -148,7 +148,7 @@ jobs:
                 -var="cors_allowed_origins=${CORS_ALLOWED_ORIGINS}" \
                 -var="dynamodb_table=${AWS_DYNAMODB_TABLE_NAME}" \
                 -var="run_log_version=<< parameters.run_log_version >>" \
-                -var="s3_bucket_stage_assets=${AWS_S3_BUCKET_NAME_STAGING}" \
+                -var="s3_bucket_stage=${AWS_S3_BUCKET_NAME_STAGING}" \
                 -var="s3_bucket_web=${AWS_S3_BUCKET_NAME_WEB}"
 
               # Export variables
