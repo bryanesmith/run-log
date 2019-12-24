@@ -27,7 +27,7 @@ Steps:
     - `AWS_ACCESS_KEY_ID`: the "Access key ID" for the IAM user you created
     - `AWS_DYNAMODB_TABLE_NAME`: name for the DynamoDB table
         - **Note**: table must not exist already, or else you will need to manually import it into Terraform state.
-    - `AWS_S3_BUCKET_NAME_STAGING_ASSETS`: the name of the bucket you created above for hosting the staged assets
+    - `AWS_S3_BUCKET_NAME_STAGING`: the name of the bucket to use for hosting the staged assets
         - **Note**: do _not_ include "`s3://`" prefix
         - **Note**: if this exists already, you'll need to manually import into Terraform
     - `AWS_S3_BUCKET_NAME_WEB`: the name of the bucket to use for hosting the static web resources

@@ -88,12 +88,12 @@ jobs:
 
               # Apply changes
               terraform init \
-                -backend-config="bucket=${AWS_S3_BUCKET_NAME_STAGING_ASSETS}" \
+                -backend-config="bucket=${AWS_S3_BUCKET_NAME_STAGING}" \
                 -backend-config="region=<< parameters.aws_region >>"
 
               terraform apply -auto-approve \
                 -var="aws_region=<< parameters.aws_region >>" \
-                -var="staging_bucket_name=${AWS_S3_BUCKET_NAME_STAGING_ASSETS}"
+                -var="staging_bucket_name=${AWS_S3_BUCKET_NAME_STAGING}"
             )
 
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -126,7 +126,7 @@ jobs:
               for LambdaZip in `ls *.zip`; do
                 echo "Deploying: $LambdaZip"
                 aws s3 cp "${LambdaZip}" "s3://run-log.bryanesmith.com-staging-assets/1.0.0/${LambdaZip}"
-                # aws s3 cp "${LambdaZip}" "s3://${AWS_S3_BUCKET_NAME_STAGING_ASSETS}/<< parameters.run_log_version >>/${LambdaZip}"
+                # aws s3 cp "${LambdaZip}" "s3://${AWS_S3_BUCKET_NAME_STAGING}/<< parameters.run_log_version >>/${LambdaZip}"
               done
             )
 
@@ -140,7 +140,7 @@ jobs:
 
               # Apply changes
               terraform init \
-                -backend-config="bucket=${AWS_S3_BUCKET_NAME_STAGING_ASSETS}" \
+                -backend-config="bucket=${AWS_S3_BUCKET_NAME_STAGING}" \
                 -backend-config="region=<< parameters.aws_region >>"
 
               terraform apply -auto-approve \
@@ -148,7 +148,7 @@ jobs:
                 -var="cors_allowed_origins=${CORS_ALLOWED_ORIGINS}" \
                 -var="dynamodb_table=${AWS_DYNAMODB_TABLE_NAME}" \
                 -var="run_log_version=<< parameters.run_log_version >>" \
-                -var="s3_bucket_stage_assets=${AWS_S3_BUCKET_NAME_STAGING_ASSETS}" \
+                -var="s3_bucket_stage_assets=${AWS_S3_BUCKET_NAME_STAGING}" \
                 -var="s3_bucket_web=${AWS_S3_BUCKET_NAME_WEB}"
 
               # Export variables
