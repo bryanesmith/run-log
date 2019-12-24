@@ -77,7 +77,7 @@ resource "aws_lambda_function" "run-log-get-events-lambda" {
   memory_size = 128
   role = aws_iam_role.run-log-lambda-role.arn
   runtime = "python3.7"
-  s3_bucket = var.s3_bucket_stage_assets
+  s3_bucket = var.s3_bucket_stage
   s3_key = "${var.run_log_version}/RunLogGetEvents.zip"
   tags = var.common_tags
 
