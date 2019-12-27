@@ -1,5 +1,6 @@
 import base64
 import os
+import pprint
 
 def lambda_handler(event, context):
     user = 'unknown'
@@ -8,6 +9,9 @@ def lambda_handler(event, context):
         user = str.decode("utf-8").split(':')[0]
     except Exception as e:
         pass
+
+    print('DEBUG: event=')
+    pprint(event)
 
     if event['authorizationToken'] in getAuthorizedTokens():
         return generate_policy(user, 'Allow', event['methodArn'])
