@@ -15,7 +15,7 @@ jobs:
       run_log_version:
         description: Version of run-log
         type: string
-        default: "1.0.0"
+        default: "0.0.1"
 
       python_version:
         description: Python version
