@@ -12,7 +12,9 @@ data "template_file" "run-log-swagger" {
   template = "${file("swagger.yaml")}"
 
   vars = {
-    get_events_lambda_arn = "${aws_lambda_function.run-log-get-events-lambda.invoke_arn}"
+    get_events_lambda_arn = aws_lambda_function.run-log-get-events-lambda.invoke_arn
+    lambda_role_arn = aws_iam_role.run-log-authorizer-role.arn
+    authorizer_arn = aws_lambda_function.token-authorizer.invoke_arn
   }
 }
 

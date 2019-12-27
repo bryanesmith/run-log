@@ -70,6 +70,27 @@ EOF
 
 # Lambdas
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+# TokenAuthorizer
+resource "aws_lambda_function" "token-authorizer" {
+  function_name = "TokenAuthorizer"
+
+  handler = "index.lambda_handler"
+  memory_size = 128
+  role = aws_iam_role.run-log-lambda-role.arn
+  runtime = "python3.8"
+  s3_bucket = var.s3_bucket_stage
+  s3_key = "${var.run_log_version}/TokenAuthorizer.zip"
+  tags = var.common_tags
+
+  environment {
+    variables = {
+      AUTHORIZED_TOKENS=var.authorized_tokens
+    }
+  }
+}
+
+# RunLogGetEvents
 resource "aws_lambda_function" "run-log-get-events-lambda" {
   function_name = "RunLogGetEvents"
 

@@ -4,6 +4,7 @@
 
 # Required
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+variable "authorized_tokens"        {}
 variable "aws_region"               {}
 variable "cors_allowed_origins"     {}
 variable "dynamodb_table"           {}

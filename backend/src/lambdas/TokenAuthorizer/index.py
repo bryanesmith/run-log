@@ -1,25 +1,35 @@
 import base64
 import os
-import pprint
 
 def lambda_handler(event, context):
+
+    authorization = parseBasicAuthorizationToken(getAuthorizationToken(event))
+
     user = 'unknown'
     try:
-        str = base64.b64decode(event['authorizationToken'])
+        str = base64.b64decode(authorization)
         user = str.decode("utf-8").split(':')[0]
     except Exception as e:
         pass
 
-    print('DEBUG: event=')
-    pprint(event)
-
-    if event['authorizationToken'] in getAuthorizedTokens():
+    if authorization in getValidAuthorizedTokens():
         return generate_policy(user, 'Allow', event['methodArn'])
     else:
         return generate_policy(user, 'Deny', event['methodArn'])
 
+def getAuthorizationToken(event):
+    if 'authorizationToken' in event:
+        return event['authorizationToken']
+    else:
+        raise Exception('Unauthorized')
 
-def getAuthorizedTokens():
+def parseBasicAuthorizationToken(token):
+    if token.startswith('Basic '):
+        return token[6:].strip()
+    else:
+        raise Exception('Unauthorized')
+
+def getValidAuthorizedTokens():
     if 'AUTHORIZED_TOKENS' in os.environ:
         return os.environ['AUTHORIZED_TOKENS'].split(',')
     else:

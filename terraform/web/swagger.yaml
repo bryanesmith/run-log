@@ -17,13 +17,28 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/EventsPayload"
+      security:
+        - request_authorizer_single_header: []
       x-amazon-apigateway-integration:
         uri: ${get_events_lambda_arn}
         passthroughBehavior: "when_no_match"
         httpMethod: "POST"
         type: "aws_proxy"
+        authorization:
 
 components:
+  securitySchemes:
+    request_authorizer_single_header:
+      type: apiKey
+      name: Authorization
+      in: header
+      x-amazon-apigateway-authtype: custom
+      x-amazon-apigateway-authorizer:
+        type: token
+        identitySource: method.request.header.Authorization
+        authorizerCredentials: ${lambda_role_arn}
+        authorizerUri: ${authorizer_arn}
+        authorizerResultTtlInSeconds: 5 # TODO: Cache for something like 300
   schemas:
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -125,8 +125,7 @@ jobs:
               cd .build
               for LambdaZip in `ls *.zip`; do
                 echo "Deploying: $LambdaZip"
-                aws s3 cp "${LambdaZip}" "s3://run-log.bryanesmith.com-staging-assets/1.0.0/${LambdaZip}"
-                # aws s3 cp "${LambdaZip}" "s3://${AWS_S3_BUCKET_NAME_STAGING}/<< parameters.run_log_version >>/${LambdaZip}"
+                aws s3 cp "${LambdaZip}" "s3://${AWS_S3_BUCKET_NAME_STAGING}/<< parameters.run_log_version >>/${LambdaZip}"
               done
             )
 
@@ -144,6 +143,7 @@ jobs:
                 -backend-config="region=<< parameters.aws_region >>"
 
               terraform apply -auto-approve \
+                -var="authorized_tokens=${AUTHORIZED_TOKENS}" \
                 -var="aws_region=<< parameters.aws_region >>" \
                 -var="cors_allowed_origins=${CORS_ALLOWED_ORIGINS}" \
                 -var="dynamodb_table=${AWS_DYNAMODB_TABLE_NAME}" \

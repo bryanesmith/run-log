@@ -5,6 +5,17 @@ Web application for logging runs and tracking progress. Includes an AWS serverle
 
 If you'd like more information on the product and the technical approach,  [review this presentation](https://docs.google.com/presentation/d/1A99DvfPVWyc-2TcBnq0_8jJZ-GgUx-0bhkbwZQlP6-s).
 
+## Warning
+
+This is a demonstration application. The authentication mechanism is insecure, because:
+
+* The credentials are stored in front-end application state
+* Valid credentials stored in environment variable in CI/CD and lambdas
+
+Do _not_ reuse credentials with any other system, and expect that the credentials used are insecure.
+
+This warning will be removed once a secure authentication method is used.
+
 ## Setup
 
 Here, we'll discuss how to deploy the application to AWS using CircleCI.
@@ -24,6 +35,16 @@ Steps:
     - Find "run-log", and click "Set Up Project"
     - This may initiate a build that fails, which is expected
 5. In Circle CI "Jobs" > "run-log" (click gear icon) > "Environment Variables", add the following variables:
+    - `AUTHORIZED_TOKENS`: comma separated list of Base64-encoded "username:password" pairs
+      1. E.g., say you want two users: one with username `foo` with password `bar`, and another with username `demo` with password `secret`
+      2. You can find the two base64-encoded strings in Unix:
+      ```
+      $ echo -n "foo:bar" | base64
+      Zm9vOmJhcg==
+      $ echo -n "demo:secret" | base64
+      ZGVtbzpzZWNyZXQ=
+      ```
+      3. So `AUTHORIZED_TOKENS` would be `Zm9vOmJhcg==,ZGVtbzpzZWNyZXQ=`
     - `AWS_ACCESS_KEY_ID`: the "Access key ID" for the IAM user you created
     - `AWS_DYNAMODB_TABLE_NAME`: name for the DynamoDB table
         - **Note**: table must not exist already, or else you will need to manually import it into Terraform state.
