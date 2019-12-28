@@ -150,12 +150,15 @@ export function addEvent(event: Events.Any) {
 /**
  * TODO: get from server
  */
-export function loadEvents() {
+export function loadEvents(credentials: string) { // TODO: yuck
   return (dispatch: Dispatch<Action>) => {
     dispatch(Actions.requestEvents());
     const url = `${config.baseUrl}/api/v1/events`;
     fetch(url, {
-      credentials: 'include',
+      // credentials: 'include',
+      headers: {
+        Authorization: 'Basic ' + credentials
+      }
     })
       .then((response: any) => response.json())
       .then((events: any) => dispatch(Actions.receiveEvents(events)));

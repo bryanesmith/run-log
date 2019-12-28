@@ -5,16 +5,20 @@ Web application for logging runs and tracking progress. Includes an AWS serverle
 
 If you'd like more information on the product and the technical approach,  [review this presentation](https://docs.google.com/presentation/d/1A99DvfPVWyc-2TcBnq0_8jJZ-GgUx-0bhkbwZQlP6-s).
 
-## Warning
+## Important warning about security
 
-This is a demonstration application. The authentication mechanism is insecure, because:
+**Read this before running the application.**
 
-* The credentials are stored in front-end application state
+This is currently a demonstration application. The authentication mechanism is not very secure, because:
+
+* The credentials are stored as part of the front-end application state
 * Valid credentials stored in environment variable in CI/CD and lambdas
 
-Do _not_ reuse credentials with any other system, and expect that the credentials used are insecure.
+Do _not_ reuse credentials with any other system, and treat the credentials as insecure. Do not store sensitive information.
 
-This warning will be removed once a secure authentication method is used.
+Note that this application uses SSL to transmit HTTP requests, so the use of HTTP Basic Authentication should be secure. It is the manner in how this information is stored in frontend and backend that is not sufficiently secure; not how credentials are transferred.
+
+This warning will be removed once a more secure authentication method is used.
 
 ## Setup
 
