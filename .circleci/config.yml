@@ -196,8 +196,6 @@ jobs:
       - run:
           name: View web assets
           command: ls frontend/dist
-      # TODO: Set up s3 bucket, if not exists, using Terraform
-      # TODO: Branch-specific s3 buckets
       - run:
           name: Sync web assets with S3
           command: aws s3 sync frontend/dist s3://${AWS_S3_BUCKET_NAME_WEB}

@@ -91,7 +91,7 @@ components:
         identitySource: method.request.header.Authorization
         authorizerCredentials: ${lambda_role_arn}
         authorizerUri: ${authorizer_arn}
-        authorizerResultTtlInSeconds: 5 # TODO: Cache for something like 300
+        authorizerResultTtlInSeconds: 300
   schemas:
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - -

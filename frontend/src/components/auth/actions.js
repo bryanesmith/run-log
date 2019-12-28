@@ -9,6 +9,12 @@ export const SEND_LOGIN = 'SEND_LOGIN',
   STORE_CREDENTIALS = 'STORE_CREDENTIALS',
   VALIDATE_CREDENTIALS = 'VALIDATE_CREDENTIALS';
 
+//
+// TODO: Temporarily disabling login, sessions XHRs. Application will instead
+//       store token in state. This is not very secure; there's a note in the
+//       README explaining this.
+//
+
 // function sendLoginAction(username, password) {
 //   return {
 //     type: SEND_LOGIN,
@@ -23,12 +29,6 @@ export const SEND_LOGIN = 'SEND_LOGIN',
 //     message: statusText,
 //   };
 // }
-
-//
-// TODO: Temporarily disabling login. Application will instead
-//       store token in state. This is not very secure; there's
-//       a note in the README explaining this.
-//
 
 // export function login(username, password) {
 //   return dispatch => {
@@ -65,12 +65,6 @@ export function login(username, password) {
 //     type: ok ? RECEIVE_CHECK_SESSION_SUCCESS : RECEIVE_CHECK_SESSION_FAIL
 //   };
 // }
-
-//
-// TODO: temporarily disabling sessions while migrating to serverless
-//       backend. Simulating services to provide read-only access to demo
-//       data.
-//
 
 // export function checkSession() {
 //   return dispatch => {

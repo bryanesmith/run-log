@@ -15,7 +15,6 @@ def lambda_handler(event, context):
     table = dynamodb.Table(os.environ['DB_TABLE_NAME'])
     items = table.scan()
 
-    # TODO: sort by @id (but numerically, not alphabetically)
     sortedItems = sorted(items["Items"], key=lambda e: e['date'], reverse=True)
 
     # json.dumps doesn't support Decimal, so convert to floats

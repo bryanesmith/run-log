@@ -148,9 +148,6 @@ export function addEvent(event: Events.Any) {
   );
 }
 
-/**
- * TODO: get from server
- */
 export function loadEvents(credentials: string) { // TODO: yuck
   return (dispatch: Dispatch<Action>) => {
     dispatch(Actions.requestEvents());
