@@ -9,16 +9,28 @@ If you'd like more information on the product and the technical approach,  [revi
 
 **Read this before running the application.**
 
-The authentication mechanism is not very secure, because:
+The authentication mechanism is not secure, because:
 
-* The credentials are stored as part of the front-end application state
-* Valid credentials stored in environment variable in CI/CD and lambdas
+* The credentials are stored as part of the front-end application state, and are hence exposed as plain text to debugging tools (e.g., React Developer Tools)
+* Valid credentials stored in environment variable in CI/CD and lambdas as plain text
 
 Do _not_ reuse credentials with any other system, and treat the credentials as insecure. Do not store sensitive information.
 
 Note that this application uses SSL to transmit HTTP requests, so the use of HTTP Basic Authentication should be secure. It is the manner in how this information is stored in frontend and backend that is not sufficiently secure; not how credentials are transferred.
 
 This warning will be removed once a more secure authentication method is used. Meanwhile, treat this like a demonstration application.
+
+## Repository structure
+* `.circleci/config.yml`: CI/CD configuration, using CircleCI
+* `archive/`: currently unused files, reserved for quick reference
+    - `backend-aws/`: experimental code using AWS
+    - `backend-http4s/`: previous backend, which used the Scala framework, http4s
+* `backend/`: source code for backend web API. (E.g., AWS Lambda source code)
+* `frontend/`
+    - `README.md`: details and instructions for frontend web application
+* `terraform/`
+    - `staging/`: manages build and configuration infrastructure
+    - `web/`: manages web infrastructure (e.g., API Gateway, Lambdas, CloudFront, etc)
 
 ## Setup
 
@@ -85,7 +97,7 @@ The url for your instance will be `https://xxxxxxxxxxxxxx.cloudfront.net`.
   <kbd>
     <img src="./images/0.png">
   </kbd>
-  <figcaption>Use `demo`/`demo` to log in and view demo user data.</figcaption>
+  <figcaption>Login screen.</figcaption>
 </figure>
 
 ### Dashboard
