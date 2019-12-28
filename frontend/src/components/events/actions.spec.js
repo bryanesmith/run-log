@@ -1,4 +1,4 @@
-import { loadEvents } from './actions';
+//import { loadEvents } from './actions';
 
 
 test('pass for now', () => {
