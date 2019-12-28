@@ -1,6 +1,6 @@
 {
   "name": "react-redux-starter",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "main": "dist/app.bundle.js",
   "repository": "git@github.com:bryanesmith/react-redux-starter.git",
   "author": "Bryan Smith <bryanesmith@gmail.com>",

@@ -4,17 +4,54 @@ import {
   RECEIVE_LOGIN_FAIL,
   SEND_CHECK_SESSION,
   RECEIVE_CHECK_SESSION_SUCCESS,
-  RECEIVE_CHECK_SESSION_FAIL
+  RECEIVE_CHECK_SESSION_FAIL,
+  STORE_CREDENTIALS,
+  VALIDATE_CREDENTIALS
 } from './actions';
 
-export const INITIAL_STATE = {
+const INITIAL_STATE = {
   loading: false,
   authenticated: false,
   message: null,
 };
 
+/**
+ * Constructs initiate state. message parameter optional, and used to display
+ *   message on login screen.
+ */
+export function initialState(message) {
+  return {
+    ...INITIAL_STATE,
+    message
+  };
+}
+
 export default function(state = INITIAL_STATE, action) {
   switch (action.type) {
+    case STORE_CREDENTIALS:
+      return {
+        ...state,
+        loading: false,
+        authenticated: true,
+        credentials: action.credentials,
+        message: null
+      };
+    case VALIDATE_CREDENTIALS:
+      if (!!state.credentials) {
+        return {
+          ...state,
+          loading: false,
+          authenticated: true,
+          message: null
+        };
+      } else {
+        return {
+          ...state,
+          loading: false,
+          authenticated: false,
+          message: null
+        };
+      }
     case SEND_LOGIN:
       return {
         ...state,

@@ -14,7 +14,7 @@ class LoadEvents extends React.Component {
   }
 
   componentWillMount() {
-    this.props.loadEvents();
+    this.props.loadEvents(this.props.authenticate.credentials); // TODO: yuck
   }
 
   render() {
@@ -26,6 +26,7 @@ class LoadEvents extends React.Component {
 
 function mapStateToProps(state) {
   return {
+    authenticate: state.authenticate, // TODO: yuck
     events: state.events,
   };
 }

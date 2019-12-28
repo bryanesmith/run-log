@@ -3,7 +3,7 @@ import ModalsReducer, {
   INITIAL_STATE as MODALS_INIT,
 } from 'run-log/components/activity/modals/reducer';
 import AuthenticateReducer, {
-  INITIAL_STATE as AUTH_INIT,
+  initialState as authInitialState,
 } from 'run-log/components/auth/reducer';
 import DashboardReducer, {
   INITIAL_STATE as DASHBOARD_INIT,
@@ -21,6 +21,20 @@ export interface RootState {
   modals: State.Modals;
 }
 
+//
+// TODO: Would normally be exported from actions file, but that file is JS, not TS.
+//
+export type RootAction =
+  | ClearStateAction;
+
+//
+// TODO: Would normally be exported from actions file, but that file is JS, not TS.
+//
+class ClearStateAction implements Action {
+  public type: 'CLEAR_STATE';
+  public message: string;
+}
+
 // https://stackoverflow.com/a/35641992
 const appReducer = combineReducers<RootState>({
   authenticate: AuthenticateReducer,
@@ -29,11 +43,11 @@ const appReducer = combineReducers<RootState>({
   modals: ModalsReducer,
 });
 
-const rootReducer = (state: RootState, action: Action) => {
+const rootReducer = (state: RootState, action: RootAction) => {
   if (action.type === CLEAR_STATE) {
     state = {
       // type safe initial state
-      authenticate: AUTH_INIT,
+      authenticate: authInitialState(action.message),
       dashboard: DASHBOARD_INIT,
       events: EVENTS_INIT,
       modals: MODALS_INIT,

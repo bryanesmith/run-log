@@ -5,7 +5,7 @@ import { IndexLinkContainer } from 'react-router-bootstrap';
 import { NavItem } from 'react-bootstrap';
 /*eslint-enable no-unused-vars*/
 
-import config from 'run-log/config.json';
+// import config from 'run-log/config.json';
 import { clearState } from 'run-log/scripts/actions';
 
 import { connect } from 'react-redux';
@@ -13,17 +13,30 @@ import { withRouter } from 'react-router';
 
 class Header extends React.Component {
   handleLogout() {
-    const url = `${config.baseUrl}/api/v1/logout`;
-    fetch(url, {
-      credentials: 'include',
-    }).then(() => {
-      this.props.clearState();
-      // Redirect to root, but avoid warning
-      //   "Hash history cannot PUSH the same path"
-      if (this.props.history.location.pathname !== '/') {
-        this.props.history.push('/');
-      }
-    });
+
+    //
+    // TODO: Implment logout. See auth/actions.js for details.
+    //
+
+    // const url = `${config.baseUrl}/api/v1/logout`;
+    // fetch(url, {
+    //   credentials: 'include',
+    // }).then(() => {
+    //   this.props.clearState();
+    //   // Redirect to root, but avoid warning
+    //   //   "Hash history cannot PUSH the same path"
+    //   if (this.props.history.location.pathname !== '/') {
+    //     this.props.history.push('/');
+    //   }
+    // });
+
+    this.props.clearState();
+
+    // Redirect to root, but avoid warning
+    //   "Hash history cannot PUSH the same path"
+    if (this.props.history.location.pathname !== '/') {
+      this.props.history.push('/');
+    }
   }
 
   render() {
