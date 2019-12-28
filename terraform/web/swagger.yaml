@@ -1,13 +1,17 @@
 openapi: '3.0.0'
 
 info:
-  version: '1.0.0'
+  version: '0.0.1'
   title: "run-log"
 
 paths:
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   /api/v1/events:
+
+    #
+    # Fetch events
+    #
     get:
       summary: "Get all events"
       responses:
@@ -17,6 +21,13 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/EventsPayload"
+          headers:
+            Access-Control-Allow-Headers:
+              type: "string"
+            Access-Control-Allow-Methods:
+              type: "string"
+            Access-Control-Allow-Origin:
+              type: "string"
       security:
         - request_authorizer_single_header: []
       x-amazon-apigateway-integration:
@@ -25,6 +36,48 @@ paths:
         httpMethod: "POST"
         type: "aws_proxy"
         authorization:
+
+    #
+    # Enables non-simple CORs.
+    # See: https://docs.aws.amazon.com/apigateway/latest/developerguide/enable-cors-for-resource-using-swagger-importer-tool.html
+    #
+    options:
+      summary: CORS support
+      description: |
+        Enable CORS by returning correct headers
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        - CORS
+      x-amazon-apigateway-integration:
+        type: mock
+        requestTemplates:
+          application/json: |
+            {
+              "statusCode" : 200
+            }
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers : "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'"
+              method.response.header.Access-Control-Allow-Methods : "'*'"
+              method.response.header.Access-Control-Allow-Origin : "'*'"
+            responseTemplates:
+              application/json: |
+                {}
+      responses:
+        200:
+          description: Default response for CORS method
+          headers:
+            Access-Control-Allow-Headers:
+              type: "string"
+            Access-Control-Allow-Methods:
+              type: "string"
+            Access-Control-Allow-Origin:
+              type: "string"
 
 components:
   securitySchemes:

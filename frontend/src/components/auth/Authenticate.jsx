@@ -52,9 +52,14 @@ class Authenticate extends React.Component {
         <button type="submit" className="btn btn-primary">
           Submit
         </button>
-        <a className="hint" onClick={this.hint}>
-          <span className="glyphicon glyphicon-question-sign" />
-        </a>
+        {
+          // TODO: disabling hint until there's actually a demo user
+          /*
+          <a className="hint" onClick={this.hint}>
+            <span className="glyphicon glyphicon-question-sign" />
+          </a>
+          */
+        }
       </form>
     );
   } // formContents

@@ -25,6 +25,7 @@ resource "aws_api_gateway_deployment" "run-log-api-gateway-deployment" {
   stage_name  = var.environment
 }
 
+
 # Permissions
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 resource "aws_lambda_permission" "run-log-api-gateway-invoke-get-lambda" {
@@ -34,4 +35,17 @@ resource "aws_lambda_permission" "run-log-api-gateway-invoke-get-lambda" {
   principal     = "apigateway.amazonaws.com"
 
   source_arn = "${aws_api_gateway_deployment.run-log-api-gateway-deployment.execution_arn}/*/*"
+}
+
+# Settings
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+resource "aws_api_gateway_method_settings" "run-log-api-gateway-deployment-settings" {
+  rest_api_id = aws_api_gateway_rest_api.run-log-api-gateway.id
+  stage_name  = var.environment
+  method_path = "*/*"
+
+  settings {
+    data_trace_enabled = true
+    logging_level   = "INFO"
+  }
 }

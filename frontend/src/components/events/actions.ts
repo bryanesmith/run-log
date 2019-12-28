@@ -3,6 +3,7 @@ q.polyfill();
 import fetch from 'isomorphic-fetch';
 
 import config from 'run-log/config.json';
+import { clearState } from 'run-log/scripts/actions';
 
 import { Action, Dispatch } from 'redux';
 
@@ -161,7 +162,10 @@ export function loadEvents(credentials: string) { // TODO: yuck
       }
     })
       .then((response: any) => response.json())
-      .then((events: any) => dispatch(Actions.receiveEvents(events)));
+      .then((events: any) => dispatch(Actions.receiveEvents(events)))
+      .catch((error: any) => {
+        dispatch(clearState('Please check your credentials.'));
+      });
   };
 }
 

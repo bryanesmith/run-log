@@ -9,11 +9,22 @@ import {
   VALIDATE_CREDENTIALS
 } from './actions';
 
-export const INITIAL_STATE = {
+const INITIAL_STATE = {
   loading: false,
   authenticated: false,
   message: null,
 };
+
+/**
+ * Constructs initiate state. message parameter optional, and used to display
+ *   message on login screen.
+ */
+export function initialState(message) {
+  return {
+    ...INITIAL_STATE,
+    message
+  };
+}
 
 export default function(state = INITIAL_STATE, action) {
   switch (action.type) {
