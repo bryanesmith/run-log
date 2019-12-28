@@ -9,7 +9,7 @@ If you'd like more information on the product and the technical approach,  [revi
 
 **Read this before running the application.**
 
-This is currently a demonstration application. The authentication mechanism is not very secure, because:
+The authentication mechanism is not very secure, because:
 
 * The credentials are stored as part of the front-end application state
 * Valid credentials stored in environment variable in CI/CD and lambdas
@@ -18,7 +18,7 @@ Do _not_ reuse credentials with any other system, and treat the credentials as i
 
 Note that this application uses SSL to transmit HTTP requests, so the use of HTTP Basic Authentication should be secure. It is the manner in how this information is stored in frontend and backend that is not sufficiently secure; not how credentials are transferred.
 
-This warning will be removed once a more secure authentication method is used.
+This warning will be removed once a more secure authentication method is used. Meanwhile, treat this like a demonstration application.
 
 ## Setup
 
