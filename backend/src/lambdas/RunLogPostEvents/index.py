@@ -1,6 +1,4 @@
-from decimal import Decimal
 import boto3
-import collections
 import json
 import lambda_utils
 import os

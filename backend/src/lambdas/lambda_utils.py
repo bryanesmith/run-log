@@ -1,3 +1,7 @@
+import collections
+from decimal import Decimal
+import os
+
 def addCORS(event, respBody):
     try:
         origin = event['headers']['origin']
