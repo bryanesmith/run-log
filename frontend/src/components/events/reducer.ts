@@ -26,14 +26,6 @@ export default function(
   action: EventsAction
 ): State.Events {
   switch (action.type) {
-    case 'SET_FAVORITE':
-      const fave = transformEvent(action.eventId, e => {
-        return { ...e, favorite: action.favorite };
-      });
-      return {
-        ...state,
-        data: state.data.map(fave),
-      };
     case 'SEND_SAVE_EVENT':
     case 'SEND_DELETE_EVENT':
     case 'SEND_GET_EVENTS':

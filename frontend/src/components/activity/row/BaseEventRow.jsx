@@ -13,7 +13,7 @@ import {
   MODAL_CROSS_TRAIN,
   MODAL_SHOES,
 } from 'run-log/components/activity/modals/actions';
-import { deleteEvent, setFavorite } from 'run-log/components/events/actions';
+import { deleteEvent, saveEvent } from 'run-log/components/events/actions';
 
 import { connect } from 'react-redux';
 
@@ -52,7 +52,8 @@ class BaseEventRow extends React.Component {
   }
 
   handleFavorite() {
-    this.props.setFavorite(this.props.event['@id'], !this.props.event.favorite);
+    this.props.event.favorite = !this.props.event.favorite;
+    this.props.saveEvent(this.props.event, this.props.authenticate.credentials); // DEBUG: yuck
   }
 
   render() {
@@ -74,6 +75,6 @@ BaseEventRow.propTypes = {
   event: PropTypes.object.isRequired,
 };
 
-export default connect(mapStateToProps, { deleteEvent, showModal, setFavorite })(
+export default connect(mapStateToProps, { deleteEvent, saveEvent, showModal })(
   BaseEventRow
 );

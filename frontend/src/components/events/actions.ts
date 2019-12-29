@@ -9,12 +9,6 @@ import { Action, Dispatch } from 'redux';
 
 const MILLIS_WAIT = 350;
 
-class FavoriteAction implements Action {
-  public eventId: string;
-  public favorite: boolean;
-  public type: 'SET_FAVORITE';
-}
-
 class DeleteAction implements Action {
   public eventId: string;
   public type: 'SEND_DELETE_EVENT';
@@ -36,20 +30,12 @@ class ReceiveGetAction implements Action {
 }
 
 export type EventsAction =
-  | FavoriteAction
   | DeleteAction
   | CrudAction
   | SendGetAction
   | ReceiveGetAction;
 
 const Actions = {
-  setFavorite(eventId: string, favorite: boolean): FavoriteAction {
-    return {
-      eventId,
-      favorite,
-      type: 'SET_FAVORITE',
-    };
-  },
 
   requestDeleteEvent(eventId: string): DeleteAction {
     return {
@@ -79,8 +65,6 @@ const Actions = {
     };
   },
 }; // Actions
-
-export const setFavorite = Actions.setFavorite;
 
 const Urls = {
   events: `${config.baseUrl}/api/v1/events`,
