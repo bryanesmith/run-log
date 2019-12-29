@@ -25,8 +25,7 @@ class CrudAction implements Action {
   public type:
     | 'SEND_EDIT_EVENT'
     | 'RECEIVE_EDIT_EVENT'
-    | 'SEND_ADD_EVENT'
-    | 'RECEIVE_ADD_EVENT';
+    | 'SEND_ADD_EVENT';
 }
 
 class SendGetAction implements Action {
@@ -83,17 +82,10 @@ const Actions = {
     };
   },
 
-  requestAddEvent(event: any): CrudAction {
+  requestAddEvent(event: Events.Any): CrudAction {
     return {
       event,
       type: 'SEND_ADD_EVENT',
-    };
-  },
-
-  receiveAddEvent(event: any): CrudAction {
-    return {
-      event,
-      type: 'RECEIVE_ADD_EVENT',
     };
   },
 
@@ -140,7 +132,6 @@ export function addEvent(event: Events.Any, credentials: string) {
     const url = `${config.baseUrl}/api/v1/events`;
     return handleCredentialsFailure(
       dispatch,
-      // TODO: server should return events, and reload from there
       fetch(url, {
         body: JSON.stringify({
           events: [event]
@@ -150,7 +141,10 @@ export function addEvent(event: Events.Any, credentials: string) {
           'Content-Type': 'application/json'
         },
         method: 'POST',
-      }).then((response: any) => dispatch(Actions.receiveAddEvent(event)))
+      }).then((response: any) => {
+        // Delegate to loadEvent to refetch data
+        loadEvents(credentials)(dispatch);
+      })
     );
   };
 }
