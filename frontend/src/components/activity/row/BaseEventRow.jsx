@@ -24,7 +24,7 @@ class BaseEventRow extends React.Component {
 
   handleDelete() {
     if (confirm('Really delete?')) {
-      this.props.deleteEvent(this.props.event['@id']);
+      this.props.deleteEvent(this.props.event['@id'], this.props.authenticate.credentials); // TODO: yuck
     }
   }
 
@@ -64,10 +64,16 @@ class BaseEventRow extends React.Component {
   }
 } // BaseEventRow
 
+function mapStateToProps(state) {
+  return {
+    authenticate: state.authenticate, // TODO: yuck
+  };
+}
+
 BaseEventRow.propTypes = {
   event: PropTypes.object.isRequired,
 };
 
-export default connect(null, { deleteEvent, showModal, setFavorite })(
+export default connect(mapStateToProps, { deleteEvent, showModal, setFavorite })(
   BaseEventRow
 );

@@ -12,10 +12,11 @@ data "template_file" "run-log-swagger" {
   template = "${file("swagger.yaml")}"
 
   vars = {
-    get_events_lambda_arn = aws_lambda_function.run-log-get-events-lambda.invoke_arn
-    post_events_lambda_arn = aws_lambda_function.run-log-post-events-lambda.invoke_arn
-    lambda_role_arn = aws_iam_role.run-log-authorizer-role.arn
-    authorizer_arn = aws_lambda_function.token-authorizer.invoke_arn
+    get_events_lambda_arn     = aws_lambda_function.run-log-get-events-lambda.invoke_arn
+    post_events_lambda_arn    = aws_lambda_function.run-log-post-events-lambda.invoke_arn
+    delete_events_lambda_arn  = aws_lambda_function.run-log-delete-events-lambda.invoke_arn
+    lambda_role_arn           = aws_iam_role.run-log-authorizer-role.arn
+    authorizer_arn            = aws_lambda_function.token-authorizer.invoke_arn
   }
 }
 
@@ -42,6 +43,15 @@ resource "aws_lambda_permission" "run-log-api-gateway-invoke-post-lambda" {
   statement_id  = "RunLogAPIGatewayInvokePostLambda"
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.run-log-post-events-lambda.arn
+  principal     = "apigateway.amazonaws.com"
+
+  source_arn = "${aws_api_gateway_deployment.run-log-api-gateway-deployment.execution_arn}/*/*/*"
+}
+
+resource "aws_lambda_permission" "run-log-api-gateway-invoke-delete-lambda" {
+  statement_id  = "RunLogAPIGatewayInvokeDeleteLambda"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.run-log-delete-events-lambda.arn
   principal     = "apigateway.amazonaws.com"
 
   source_arn = "${aws_api_gateway_deployment.run-log-api-gateway-deployment.execution_arn}/*/*/*"

@@ -42,7 +42,6 @@ paths:
     post:
       summary: "Post event(s)"
       requestBody:
-        description: Optional description in *Markdown*
         required: true
         content:
           application/json:
@@ -50,7 +49,7 @@ paths:
               $ref: '#/components/schemas/EventsPayload'
       responses:
         200:
-          description: "Successfully add event(s)"
+          description: "Successfully created event(s)"
           headers:
             Access-Control-Allow-Headers:
               type: "string"
@@ -62,6 +61,35 @@ paths:
         - request_authorizer_single_header: []
       x-amazon-apigateway-integration:
         uri: ${post_events_lambda_arn}
+        passthroughBehavior: "when_no_match"
+        httpMethod: "POST"
+        type: "aws_proxy"
+
+    #
+    # Delete event(s)
+    #
+    delete:
+      summary: "Delete event(s)"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EventsPayload'
+      responses:
+        200:
+          description: "Successfully deleted event(s)"
+          headers:
+            Access-Control-Allow-Headers:
+              type: "string"
+            Access-Control-Allow-Methods:
+              type: "string"
+            Access-Control-Allow-Origin:
+              type: "string"
+      security:
+        - request_authorizer_single_header: []
+      x-amazon-apigateway-integration:
+        uri: ${delete_events_lambda_arn}
         passthroughBehavior: "when_no_match"
         httpMethod: "POST"
         type: "aws_proxy"

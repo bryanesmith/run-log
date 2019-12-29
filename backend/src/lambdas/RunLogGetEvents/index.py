@@ -1,4 +1,3 @@
-import boto3
 import json
 import lambda_utils
 import os
@@ -10,8 +9,7 @@ import os
 #
 def lambda_handler(event, context):
 
-    dynamodb = boto3.resource('dynamodb')
-    table = dynamodb.Table(os.environ['DB_TABLE_NAME'])
+    table = lambda_utils.get_dynamodb_table(os.environ['DB_TABLE_NAME'])
     items = table.scan()
 
     sortedItems = sorted(items["Items"], key=lambda e: e['date'], reverse=True)

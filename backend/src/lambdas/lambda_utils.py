@@ -1,5 +1,7 @@
+import boto3
 import collections
 from decimal import Decimal
+import json
 import os
 
 def addCORS(event, respBody):
@@ -55,3 +57,11 @@ def replace_floats(dict):
         else:
             clone[key] = value
     return clone
+
+def parse_run_events(event):
+    body = json.loads(event['body'])
+    return body['events']
+
+def get_dynamodb_table(table_name):
+    dynamodb = boto3.resource('dynamodb')
+    return dynamodb.Table(table_name)

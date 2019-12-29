@@ -14,6 +14,10 @@ output "post-events-lambda-arn" {
   value = aws_lambda_function.run-log-post-events-lambda.arn
 }
 
+output "delete-events-lambda-arn" {
+  value = aws_lambda_function.run-log-delete-events-lambda.arn
+}
+
 output "api-gateway-url" {
   value = aws_api_gateway_deployment.run-log-api-gateway-deployment.invoke_url
 }

@@ -145,11 +145,6 @@ jobs:
                 -backend-config="bucket=${AWS_S3_BUCKET_NAME_STAGING}" \
                 -backend-config="region=<< parameters.aws_region >>"
 
-              # Taint lambdas, since doesn't detect changes to source code
-              terraform taint aws_lambda_function.token-authorizer
-              terraform taint aws_lambda_function.run-log-get-events-lambda
-              terraform taint aws_lambda_function.run-log-post-events-lambda
-
               terraform apply -auto-approve \
                 -var="authorized_tokens=${AUTHORIZED_TOKENS}" \
                 -var="aws_region=<< parameters.aws_region >>" \

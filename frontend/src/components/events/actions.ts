@@ -17,7 +17,7 @@ class FavoriteAction implements Action {
 
 class DeleteAction implements Action {
   public eventId: string;
-  public type: 'SEND_DELETE_EVENT' | 'RECEIVE_DELETE_EVENT';
+  public type: 'SEND_DELETE_EVENT';
 }
 
 class CrudAction implements Action {
@@ -58,13 +58,6 @@ const Actions = {
     return {
       eventId,
       type: 'SEND_DELETE_EVENT',
-    };
-  },
-
-  receiveDeleteEvent(eventId: string): DeleteAction {
-    return {
-      eventId,
-      type: 'RECEIVE_DELETE_EVENT',
     };
   },
 
@@ -109,11 +102,27 @@ export const setFavorite = Actions.setFavorite;
 /**
  * TODO: delete from server, then fetch events
  */
-export function deleteEvent(eventId: string) {
-  return simulateAsyncRequest(
-    Actions.requestDeleteEvent(eventId),
-    Actions.receiveDeleteEvent(eventId)
-  );
+export function deleteEvent(eventId: string, credentials: string) {
+  return (dispatch: Dispatch<Action>) => {
+    dispatch(Actions.requestDeleteEvent(eventId));
+    const url = `${config.baseUrl}/api/v1/events`;
+    return handleCredentialsFailure(
+      dispatch,
+      fetch(url, {
+        body: JSON.stringify({
+          events: [{ '@id': eventId }]
+        }),
+        headers: {
+          'Authorization': 'Basic ' + credentials,
+          'Content-Type': 'application/json'
+        },
+        method: 'DELETE',
+      }).then((response: any) => {
+        // Delegate to loadEvent to refetch data
+        loadEvents(credentials)(dispatch);
+      })
+    );
+  };
 }
 
 /**

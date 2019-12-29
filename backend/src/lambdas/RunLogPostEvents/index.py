@@ -1,16 +1,12 @@
-import boto3
-import json
 import lambda_utils
 import os
 
 def lambda_handler(event, context):
 
-    dynamodb = boto3.resource('dynamodb')
-    table = dynamodb.Table(os.environ['DB_TABLE_NAME'])
-    body = json.loads(event['body'])
-    events = body['events']
+    table = lambda_utils.get_dynamodb_table(os.environ['DB_TABLE_NAME'])
+    events = lambda_utils.parse_run_events(event)
 
-    print("Total number of events: {}".format(len(events)))
+    print("Total number of events to create: {}".format(len(events)))
 
     for run_event in events:
         add_run_event(table, run_event)

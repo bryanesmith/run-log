@@ -48,13 +48,6 @@ export default function(
         data: state.data.map(edit),
         loading: false,
       });
-    case 'RECEIVE_DELETE_EVENT':
-      const eqT: Fp.Predicate<Events.Any> = (e: Events.Any) =>
-        e['@id'] !== action.eventId;
-      return objAssign({}, state, {
-        data: state.data.filter(eqT),
-        loading: false,
-      });
     case 'RECEIVE_GET_EVENTS':
       return objAssign({}, state, {
         data: action.payload.events,
