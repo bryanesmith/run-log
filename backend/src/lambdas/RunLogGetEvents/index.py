@@ -30,6 +30,7 @@ def lambda_handler(event, context):
 
     return addCORS(event, respBody)
 
+# TODO: move to shared library
 def addCORS(event, respBody):
     try:
         origin = event['headers']['origin']
@@ -43,12 +44,14 @@ def addCORS(event, respBody):
 
     return respBody
 
+# TODO: move to shared library
 def getAllowedOrigins():
     if 'CORS_ALLOWED_ORIGINS' in os.environ:
         return os.environ['CORS_ALLOWED_ORIGINS'].split(',')
     else:
         return []
 
+# TODO: move to shared library
 def replace_decimals(dict):
     """Recursively replaces all decimals with floats"""
     clone = {}

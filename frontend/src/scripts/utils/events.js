@@ -83,3 +83,27 @@ export function filterEventsByEndDate(events, endDate, units, length) {
   return events
     .filter(e => moment(e.date).isBetween(startDate, endDate));
 }
+
+/**
+ * Given array of events with @id of form "_:n101", will return the next
+ *     sequential ID by incrementing the largest ID.
+ */
+export function nextId(events) {
+  return "_:n"+(largestNumberFromIds(events)+1);
+}
+
+function largestNumberFromIds(events) {
+  if (events.length === 0) {
+    return 0;
+  } else {
+    return events.map(parseNumberFromId)
+      .reduce((lgst, next) => lgst > next ? lgst : next);
+  }
+}
+
+function parseNumberFromId(event) {
+  if (event['@id'].substring(0, 3) !== '_:n') {
+    throw "Unexpected event id: "+event['@id'];
+  }
+  return parseInt(event['@id'].substring(3));
+}

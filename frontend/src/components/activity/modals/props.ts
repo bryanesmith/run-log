@@ -13,6 +13,8 @@ export interface IModalProps {
  * Modal classes' mapStateToProps
  */
 export interface IModalS2P {
+  authenticate: any; // TODO: define State.Authenticate
+  events: State.Events;
   modals: State.Modals;
 }
 
@@ -20,7 +22,7 @@ export interface IModalS2P {
  * Modal classes' mapDispatchToProps
  */
 export interface IModalD2P {
-  addEvent(e: Events.Any): Promise<any>;
+  addEvent(e: Events.Any, t: string): Promise<any>;
   editEvent(e: Events.Any): Promise<any>;
   hideModal(): Action;
 }

@@ -7,9 +7,6 @@ import { clearState } from 'run-log/scripts/actions';
 
 import { Action, Dispatch } from 'redux';
 
-// TODO: remove
-import { randomUuid } from 'run-log/scripts/utils/uuid';
-
 const MILLIS_WAIT = 350;
 
 class FavoriteAction implements Action {
@@ -137,33 +134,47 @@ export function editEvent(event: Events.Any) {
   );
 }
 
-/**
- * TODO: post to server, then fetch events
- */
-export function addEvent(event: Events.Any) {
-  event['@id'] = `urn:uuid:${randomUuid()}`; // TODO: server does this
-  return simulateAsyncRequest(
-    Actions.requestAddEvent(event),
-    Actions.receiveAddEvent(event)
-  );
+export function addEvent(event: Events.Any, credentials: string) {
+  return (dispatch: Dispatch<Action>) => {
+    dispatch(Actions.requestAddEvent(event));
+    const url = `${config.baseUrl}/api/v1/events`;
+    return handleCredentialsFailure(
+      dispatch,
+      // TODO: server should return events, and reload from there
+      fetch(url, {
+        body: JSON.stringify({
+          events: [event]
+        }),
+        headers: {
+          'Authorization': 'Basic ' + credentials,
+          'Content-Type': 'application/json'
+        },
+        method: 'POST',
+      }).then((response: any) => dispatch(Actions.receiveAddEvent(event)))
+    );
+  };
 }
 
 export function loadEvents(credentials: string) { // TODO: yuck
   return (dispatch: Dispatch<Action>) => {
     dispatch(Actions.requestEvents());
     const url = `${config.baseUrl}/api/v1/events`;
-    fetch(url, {
-      // credentials: 'include',
-      headers: {
-        Authorization: 'Basic ' + credentials
-      }
-    })
-      .then((response: any) => response.json())
-      .then((events: any) => dispatch(Actions.receiveEvents(events)))
-      .catch((error: any) => {
-        dispatch(clearState('Please check your credentials.'));
-      });
+    return handleCredentialsFailure(
+      dispatch,
+      fetch(url, {
+        headers: {
+          'Authorization': 'Basic ' + credentials
+        },
+      }).then((response: any) => response.json())
+        .then((events: any) => dispatch(Actions.receiveEvents(events)))
+    );
   };
+}
+
+function handleCredentialsFailure(dispatch: Dispatch<Action>, req: Promise<any>): Promise<any> {
+  return req.catch((error: any) => {
+    dispatch(clearState('Please check your credentials.'));
+  });
 }
 
 // Helper for simulating HTTP requests

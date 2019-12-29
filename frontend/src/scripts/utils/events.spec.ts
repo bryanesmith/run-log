@@ -1,4 +1,4 @@
-import { averageMPH, averagePace, distance, filterEventsByEndDate, pace, seconds, totalDistance } from './events';
+import { averageMPH, averagePace, distance, filterEventsByEndDate, nextId, pace, seconds, totalDistance } from './events';
 import moment from 'moment';
 
 const nonRun = {};
@@ -173,4 +173,65 @@ test('filterEventsByEndDate for multiple events, all matches', () => {
   ];
   const found = filterEventsByEndDate(events, moment('2019-04-03'), 'Day', 3);
   expect(found).toEqual(events);
+});
+
+test('nextId when no events', () => {
+  const found = nextId([]);
+  expect(found).toEqual('_:n1');
+});
+
+test('nextId when one expected event value', () => {
+  const events = [
+    { '@id': '_:n1' }
+  ];
+  const found = nextId(events);
+  expect(found).toEqual('_:n2');
+});
+
+test('nextId when one unexpected event value', () => {
+  const events = [
+    { '@id': '_:n17' }
+  ];
+  const found = nextId(events);
+  expect(found).toEqual('_:n18');
+});
+
+test('nextId when one unexpected event value with padding', () => {
+  const events = [
+    { '@id': '_:n0023' }
+  ];
+  const found = nextId(events);
+  expect(found).toEqual('_:n24');
+});
+
+test('nextId when multiple sequential event values', () => {
+  const events = [
+    { '@id': '_:n1' },
+    { '@id': '_:n2' },
+    { '@id': '_:n3' },
+  ];
+  const found = nextId(events);
+  expect(found).toEqual('_:n4');
+});
+
+test('nextId when multiple unordered sequential event values', () => {
+  const events = [
+    { '@id': '_:n2' },
+    { '@id': '_:n3' },
+    { '@id': '_:n1' },
+  ];
+  const found = nextId(events);
+  expect(found).toEqual('_:n4');
+});
+
+test('nextId when multiple non-sequential event values', () => {
+  const events = [
+    { '@id': '_:n1' },
+    { '@id': '_:n101' },
+    { '@id': '_:n200' },
+    { '@id': '_:n202' },
+    { '@id': '_:n3' },
+  ];
+  const found = nextId(events);
+  expect(found).toEqual('_:n203');
 });

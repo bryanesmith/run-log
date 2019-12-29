@@ -42,6 +42,8 @@ export default function(
         ...state,
         loading: true,
       };
+
+    // TODO: server should return events, and reload from there
     case 'RECEIVE_ADD_EVENT':
       return objAssign({}, state, {
         data: [action.event, ...state.data],
