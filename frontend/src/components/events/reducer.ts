@@ -34,7 +34,7 @@ export default function(
         ...state,
         data: state.data.map(fave),
       };
-    case 'SEND_ADD_EVENT':
+    case 'SEND_SAVE_EVENT':
     case 'SEND_EDIT_EVENT':
     case 'SEND_DELETE_EVENT':
     case 'SEND_GET_EVENTS':

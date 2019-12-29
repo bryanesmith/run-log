@@ -37,10 +37,10 @@ paths:
         type: "aws_proxy"
 
     #
-    # Post event(s)
+    # Put event(s)
     #
-    post:
-      summary: "Post event(s)"
+    put:
+      summary: "Create or update event(s)"
       requestBody:
         required: true
         content:
@@ -49,7 +49,7 @@ paths:
               $ref: '#/components/schemas/EventsPayload'
       responses:
         200:
-          description: "Successfully created event(s)"
+          description: "Successfully created or updated event(s)"
           headers:
             Access-Control-Allow-Headers:
               type: "string"
@@ -60,7 +60,7 @@ paths:
       security:
         - request_authorizer_single_header: []
       x-amazon-apigateway-integration:
-        uri: ${post_events_lambda_arn}
+        uri: ${put_events_lambda_arn}
         passthroughBehavior: "when_no_match"
         httpMethod: "POST"
         type: "aws_proxy"

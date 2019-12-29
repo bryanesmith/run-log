@@ -25,7 +25,7 @@ class CrudAction implements Action {
   public type:
     | 'SEND_EDIT_EVENT'
     | 'RECEIVE_EDIT_EVENT'
-    | 'SEND_ADD_EVENT';
+    | 'SEND_SAVE_EVENT';
 }
 
 class SendGetAction implements Action {
@@ -75,10 +75,10 @@ const Actions = {
     };
   },
 
-  requestAddEvent(event: Events.Any): CrudAction {
+  requestSaveEvent(event: Events.Any): CrudAction {
     return {
       event,
-      type: 'SEND_ADD_EVENT',
+      type: 'SEND_SAVE_EVENT',
     };
   },
 
@@ -144,7 +144,7 @@ export function editEvent(event: Events.Any) {
 
 export function addEvent(event: Events.Any, credentials: string) {
   return (dispatch: Dispatch<Action>) => {
-    dispatch(Actions.requestAddEvent(event));
+    dispatch(Actions.requestSaveEvent(event));
     return handleCredentialsFailure(
       dispatch,
       fetch(Urls.events, {
@@ -152,7 +152,7 @@ export function addEvent(event: Events.Any, credentials: string) {
           events: [event]
         }),
         headers: commonHeaders(credentials),
-        method: 'POST',
+        method: 'PUT',
       }).then((response: any) => {
         // Delegate to loadEvent to refetch data
         loadEvents(credentials)(dispatch);
