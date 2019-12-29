@@ -9,7 +9,7 @@ import moment from 'moment';
 import { FormApi } from 'react-form';
 import { connect } from 'react-redux';
 import { Action, Dispatch } from 'redux';
-import { addEvent, editEvent } from 'run-log/components/events/actions';
+import { saveEvent } from 'run-log/components/events/actions';
 import { RootState } from 'run-log/scripts/reducers';
 import { nextId } from 'run-log/scripts/utils/events';
 import { get } from 'run-log/scripts/utils/utils';
@@ -53,12 +53,11 @@ class ModalWithoutRun extends React.Component<
       notes,
     };
 
-    if (this.eventToEdit()) {
-      this.props.editEvent(thisEvent);
-    } else {
+    if (!this.eventToEdit()) {
       thisEvent['@id'] = nextId(this.props.events.data);
-      this.props.addEvent(thisEvent, this.props.authenticate.credentials); // TODO: yuck
     }
+
+    this.props.saveEvent(thisEvent, this.props.authenticate.credentials); // TODO: yuck
 
     this.props.hideModal();
   }
@@ -113,9 +112,8 @@ function mapStateToProps(state: RootState, ownProps: {}): IModalS2P {
 
 function mapDispatchToProps(dispatch: Dispatch<Action>): IModalD2P {
   return {
-    addEvent: (e, t) => dispatch(addEvent(e, t)),
-    editEvent: e => dispatch(editEvent(e)),
     hideModal: () => dispatch(hideModal()),
+    saveEvent: (e, t) => dispatch(saveEvent(e, t)),
   };
 }
 

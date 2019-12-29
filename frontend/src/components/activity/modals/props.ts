@@ -22,7 +22,6 @@ export interface IModalS2P {
  * Modal classes' mapDispatchToProps
  */
 export interface IModalD2P {
-  addEvent(e: Events.Any, t: string): Promise<any>;
-  editEvent(e: Events.Any): Promise<any>;
+  saveEvent(e: Events.Any, t: string): Promise<any>;
   hideModal(): Action;
 }

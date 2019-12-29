@@ -22,10 +22,7 @@ class DeleteAction implements Action {
 
 class CrudAction implements Action {
   public event: Events.Any;
-  public type:
-    | 'SEND_EDIT_EVENT'
-    | 'RECEIVE_EDIT_EVENT'
-    | 'SEND_SAVE_EVENT';
+  public type: 'SEND_SAVE_EVENT';
 }
 
 class SendGetAction implements Action {
@@ -58,20 +55,6 @@ const Actions = {
     return {
       eventId,
       type: 'SEND_DELETE_EVENT',
-    };
-  },
-
-  requestEditEvent(event: Events.Any): CrudAction {
-    return {
-      event,
-      type: 'SEND_EDIT_EVENT',
-    };
-  },
-
-  receiveEditEvent(event: Events.Any): CrudAction {
-    return {
-      event,
-      type: 'RECEIVE_EDIT_EVENT',
     };
   },
 
@@ -132,17 +115,7 @@ export function deleteEvent(eventId: string, credentials: string) {
   };
 }
 
-/**
- * TODO: post to server, then fetch events
- */
-export function editEvent(event: Events.Any) {
-  return simulateAsyncRequest(
-    Actions.requestEditEvent(event),
-    Actions.receiveEditEvent(event)
-  );
-}
-
-export function addEvent(event: Events.Any, credentials: string) {
+export function saveEvent(event: Events.Any, credentials: string) {
   return (dispatch: Dispatch<Action>) => {
     dispatch(Actions.requestSaveEvent(event));
     return handleCredentialsFailure(

@@ -35,19 +35,12 @@ export default function(
         data: state.data.map(fave),
       };
     case 'SEND_SAVE_EVENT':
-    case 'SEND_EDIT_EVENT':
     case 'SEND_DELETE_EVENT':
     case 'SEND_GET_EVENTS':
       return {
         ...state,
         loading: true,
       };
-    case 'RECEIVE_EDIT_EVENT':
-      const edit = transformEvent(action.event['@id'], () => action.event);
-      return objAssign({}, state, {
-        data: state.data.map(edit),
-        loading: false,
-      });
     case 'RECEIVE_GET_EVENTS':
       return objAssign({}, state, {
         data: action.payload.events,
