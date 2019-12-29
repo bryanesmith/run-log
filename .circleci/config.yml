@@ -109,13 +109,16 @@ jobs:
               #   both -r and -j together, which breaks if add subdirectories
               #   to lambdas in future
               #
-              cd backend/src/lambdas
-              for Lambda in `ls`; do
-                cd "${Lambda}"
+              for LambdaPath in `ls -d ${ROOT_DIR}/backend/src/lambdas/*/`; do
+                cd "${ROOT_DIR}/.build"
+                Lambda=$(basename "$LambdaPath")
+                echo "Creating archive for lambda: $Lambda"
+                cp -R "${LambdaPath}" "${Lambda}"
+                cp ${ROOT_DIR}/backend/src/lambdas/*.py "${Lambda}"
                 Zip="${Lambda}.zip"
                 echo "Creating: ${Zip}"
+                cd "${Lambda}"
                 zip -r "${ROOT_DIR}/.build/${Zip}" "."
-                cd ..
               done
             )
       - run:
