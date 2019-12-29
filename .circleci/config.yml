@@ -109,13 +109,16 @@ jobs:
               #   both -r and -j together, which breaks if add subdirectories
               #   to lambdas in future
               #
-              cd backend/src/lambdas
-              for Lambda in `ls`; do
-                cd "${Lambda}"
+              for LambdaPath in `ls -d ${ROOT_DIR}/backend/src/lambdas/*/`; do
+                cd "${ROOT_DIR}/.build"
+                Lambda=$(basename "$LambdaPath")
+                echo "Creating archive for lambda: $Lambda"
+                cp -R "${LambdaPath}" "${Lambda}"
+                cp ${ROOT_DIR}/backend/src/lambdas/*.py "${Lambda}"
                 Zip="${Lambda}.zip"
                 echo "Creating: ${Zip}"
+                cd "${Lambda}"
                 zip -r "${ROOT_DIR}/.build/${Zip}" "."
-                cd ..
               done
             )
       - run:
@@ -141,6 +144,11 @@ jobs:
               terraform init \
                 -backend-config="bucket=${AWS_S3_BUCKET_NAME_STAGING}" \
                 -backend-config="region=<< parameters.aws_region >>"
+
+              # Taint lambdas, since doesn't detect changes to source code
+              terraform taint aws_lambda_function.token-authorizer
+              terraform taint aws_lambda_function.run-log-get-events-lambda
+              terraform taint aws_lambda_function.run-log-post-events-lambda
 
               terraform apply -auto-approve \
                 -var="authorized_tokens=${AUTHORIZED_TOKENS}" \

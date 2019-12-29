@@ -13,6 +13,7 @@ data "template_file" "run-log-swagger" {
 
   vars = {
     get_events_lambda_arn = aws_lambda_function.run-log-get-events-lambda.invoke_arn
+    post_events_lambda_arn = aws_lambda_function.run-log-post-events-lambda.invoke_arn
     lambda_role_arn = aws_iam_role.run-log-authorizer-role.arn
     authorizer_arn = aws_lambda_function.token-authorizer.invoke_arn
   }
@@ -34,7 +35,16 @@ resource "aws_lambda_permission" "run-log-api-gateway-invoke-get-lambda" {
   function_name = aws_lambda_function.run-log-get-events-lambda.arn
   principal     = "apigateway.amazonaws.com"
 
-  source_arn = "${aws_api_gateway_deployment.run-log-api-gateway-deployment.execution_arn}/*/*"
+  source_arn = "${aws_api_gateway_deployment.run-log-api-gateway-deployment.execution_arn}/*/*/*"
+}
+
+resource "aws_lambda_permission" "run-log-api-gateway-invoke-post-lambda" {
+  statement_id  = "RunLogAPIGatewayInvokePostLambda"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.run-log-post-events-lambda.arn
+  principal     = "apigateway.amazonaws.com"
+
+  source_arn = "${aws_api_gateway_deployment.run-log-api-gateway-deployment.execution_arn}/*/*/*"
 }
 
 # Settings
@@ -42,7 +52,7 @@ resource "aws_lambda_permission" "run-log-api-gateway-invoke-get-lambda" {
 resource "aws_api_gateway_method_settings" "run-log-api-gateway-deployment-settings" {
   rest_api_id = aws_api_gateway_rest_api.run-log-api-gateway.id
   stage_name  = var.environment
-  method_path = "*/*"
+  method_path = "*/*/*"
 
   settings {
     data_trace_enabled = true

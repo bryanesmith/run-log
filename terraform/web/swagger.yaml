@@ -35,7 +35,36 @@ paths:
         passthroughBehavior: "when_no_match"
         httpMethod: "POST"
         type: "aws_proxy"
-        authorization:
+
+    #
+    # Post event(s)
+    #
+    post:
+      summary: "Post event(s)"
+      requestBody:
+        description: Optional description in *Markdown*
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EventsPayload'
+      responses:
+        200:
+          description: "Successfully add event(s)"
+          headers:
+            Access-Control-Allow-Headers:
+              type: "string"
+            Access-Control-Allow-Methods:
+              type: "string"
+            Access-Control-Allow-Origin:
+              type: "string"
+      security:
+        - request_authorizer_single_header: []
+      x-amazon-apigateway-integration:
+        uri: ${post_events_lambda_arn}
+        passthroughBehavior: "when_no_match"
+        httpMethod: "POST"
+        type: "aws_proxy"
 
     #
     # Enables non-simple CORs.
@@ -91,7 +120,7 @@ components:
         identitySource: method.request.header.Authorization
         authorizerCredentials: ${lambda_role_arn}
         authorizerUri: ${authorizer_arn}
-        authorizerResultTtlInSeconds: 300
+        authorizerResultTtlInSeconds: 0 # TODO: Turning off while developing
   schemas:
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - -

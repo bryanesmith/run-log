@@ -2,8 +2,16 @@ output "dynamodb-table-arn" {
   value = aws_dynamodb_table.run-log-dynamodb-table.arn
 }
 
+output "token-authorizer-lambda-arn" {
+  value = aws_lambda_function.token-authorizer.arn
+}
+
 output "get-events-lambda-arn" {
   value = aws_lambda_function.run-log-get-events-lambda.arn
+}
+
+output "post-events-lambda-arn" {
+  value = aws_lambda_function.run-log-post-events-lambda.arn
 }
 
 output "api-gateway-url" {
