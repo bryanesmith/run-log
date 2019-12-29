@@ -99,23 +99,30 @@ const Actions = {
 
 export const setFavorite = Actions.setFavorite;
 
+const Urls = {
+  events: `${config.baseUrl}/api/v1/events`,
+}; // Urls
+
+function commonHeaders(credentials: string): any {
+  return {
+    'Authorization': 'Basic ' + credentials,
+    'Content-Type': 'application/json'
+  };
+}
+
 /**
  * TODO: delete from server, then fetch events
  */
 export function deleteEvent(eventId: string, credentials: string) {
   return (dispatch: Dispatch<Action>) => {
     dispatch(Actions.requestDeleteEvent(eventId));
-    const url = `${config.baseUrl}/api/v1/events`;
     return handleCredentialsFailure(
       dispatch,
-      fetch(url, {
+      fetch(Urls.events, {
         body: JSON.stringify({
           events: [{ '@id': eventId }]
         }),
-        headers: {
-          'Authorization': 'Basic ' + credentials,
-          'Content-Type': 'application/json'
-        },
+        headers: commonHeaders(credentials),
         method: 'DELETE',
       }).then((response: any) => {
         // Delegate to loadEvent to refetch data
@@ -138,17 +145,13 @@ export function editEvent(event: Events.Any) {
 export function addEvent(event: Events.Any, credentials: string) {
   return (dispatch: Dispatch<Action>) => {
     dispatch(Actions.requestAddEvent(event));
-    const url = `${config.baseUrl}/api/v1/events`;
     return handleCredentialsFailure(
       dispatch,
-      fetch(url, {
+      fetch(Urls.events, {
         body: JSON.stringify({
           events: [event]
         }),
-        headers: {
-          'Authorization': 'Basic ' + credentials,
-          'Content-Type': 'application/json'
-        },
+        headers: commonHeaders(credentials),
         method: 'POST',
       }).then((response: any) => {
         // Delegate to loadEvent to refetch data
@@ -161,13 +164,10 @@ export function addEvent(event: Events.Any, credentials: string) {
 export function loadEvents(credentials: string) { // TODO: yuck
   return (dispatch: Dispatch<Action>) => {
     dispatch(Actions.requestEvents());
-    const url = `${config.baseUrl}/api/v1/events`;
     return handleCredentialsFailure(
       dispatch,
-      fetch(url, {
-        headers: {
-          'Authorization': 'Basic ' + credentials
-        },
+      fetch(Urls.events, {
+        headers: commonHeaders(credentials),
       }).then((response: any) => response.json())
         .then((events: any) => dispatch(Actions.receiveEvents(events)))
     );
