@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 import {
   selectDashboardTab,
   TAB_7_DAY,
+  TAB_6_WEEK,
   TAB_365_DAY,
   TAB_ALL,
 } from './actions';
@@ -29,16 +30,17 @@ class DashboardTabs extends React.Component {
   render() {
     return (
       <ul className="nav nav-tabs">
-        {this.renderTab(TAB_7_DAY, '7 day')}
-        {this.renderTab(TAB_365_DAY, '365 day')}
-        {this.renderTab(TAB_ALL, '8yr')}
+        {this.renderTab(TAB_7_DAY, '7 days')}
+        {this.renderTab(TAB_6_WEEK, '6 weeks')}
+        {this.renderTab(TAB_365_DAY, '1 year')}
+        {this.renderTab(TAB_ALL, '8 years')}
       </ul>
     );
   }
 }
 
 DashboardTabs.propTypes = {
-  selectedTab: PropTypes.oneOf([TAB_7_DAY, TAB_365_DAY, TAB_ALL]),
+  selectedTab: PropTypes.oneOf([TAB_7_DAY, TAB_6_WEEK, TAB_365_DAY, TAB_ALL]),
 };
 
 export default connect(null, { selectDashboardTab })(DashboardTabs);

@@ -7,6 +7,7 @@ import moment from 'moment';
 
 import {
   TAB_7_DAY,
+  TAB_6_WEEK,
   TAB_365_DAY,
   TAB_ALL,
 } from 'run-log/components/dashboard/actions';
@@ -101,6 +102,12 @@ export function selectedTabBarChartParams(selectedTab) {
         barOpts: { count: 7, units: 'Day', length: 1 },
         xLabelFn: m => m.format('dd'),
       };
+    case TAB_6_WEEK:
+      const FMT = 'M/D';
+      return {
+        barOpts: { count: 6, units: 'Week', length: 1 },
+        xLabelFn: m => `${m.startOf('isoWeek').format(FMT)} - ${m.endOf('isoWeek').format(FMT)}`,
+      };
     case TAB_365_DAY:
       return {
         barOpts: { count: 12, units: 'Month', length: 1 },
@@ -118,6 +125,8 @@ export function calculateFinalDate(date, selectedTab) {
   switch (selectedTab) {
     case TAB_7_DAY:
       return date;
+    case TAB_6_WEEK:
+      return date.endOf('isoWeek');
     case TAB_365_DAY:
       return date.endOf('month');
     case TAB_ALL:

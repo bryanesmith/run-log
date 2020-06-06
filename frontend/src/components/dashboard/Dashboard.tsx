@@ -18,7 +18,7 @@ import moment, { Moment } from 'moment';
 import { connect } from 'react-redux';
 import { Action, Dispatch } from 'redux';
 import { RootState } from 'run-log/scripts/reducers';
-import { TAB_365_DAY, TAB_7_DAY, TAB_ALL } from './actions';
+import { TAB_365_DAY, TAB_6_WEEK, TAB_7_DAY, TAB_ALL } from './actions';
 
 interface IStateToProps {
   dashboard: State.Dashboard;
@@ -107,6 +107,12 @@ class Dashboard extends React.Component<{} & IStateToProps, {}> {
           startMoment: moment().subtract({ days }),
           totalDays: days,
         };
+      case TAB_6_WEEK:
+        days = 70;
+        return {
+          startMoment: moment().subtract({ days }),
+          totalDays: days,
+        }
       case TAB_365_DAY:
         days = 365;
         return {

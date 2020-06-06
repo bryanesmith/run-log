@@ -1,5 +1,6 @@
 import {
   TAB_7_DAY,
+  TAB_6_WEEK,
   TAB_365_DAY,
   TAB_ALL,
 } from 'run-log/components/dashboard/actions';
@@ -18,6 +19,9 @@ describe('calculateFinalDate should', () => {
   // TODO: use timezones instead of funky math based on daylight savings and timezones
   each([
     [moment('2020-06-06'), moment('2020-06-06'), TAB_7_DAY],
+    [moment('2020-06-07'), moment('2020-06-01'), TAB_6_WEEK], // mon
+    [moment('2020-06-07'), moment('2020-06-06'), TAB_6_WEEK], // tue
+    [moment('2020-06-07'), moment('2020-06-07'), TAB_6_WEEK], // wed
     [moment('2020-06-30'), moment('2020-06-06'), TAB_365_DAY],
     [moment('2020-12-31'), moment('2020-06-06'), TAB_ALL],
   ]).it('return %s for %s on tab "%s"', (expected, date, tab) => {
@@ -44,6 +48,8 @@ describe('barChartData should', () => {
 
   const LABELS_JULY_THRU_JUNE = ['Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
 
+  const LABELS_APR_27_THRU_JUN_7 = [ '4/27 - 5/3', '5/4 - 5/10', '5/11 - 5/17', '5/18 - 5/24', '5/25 - 5/31', '6/1 - 6/7' ];
+
   const LABELS_SUN_THRU_SAT = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
 
   each([
@@ -67,6 +73,25 @@ describe('barChartData should', () => {
 
     // TAB_365_DAY: Show aggregates multiple events in given day
     [TAB_365_DAY, '2020-06-06', EVENTS_MULTIPLE_2019_08_03, LABELS_JULY_THRU_JUNE, [0, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]],
+
+    // TAB_6_WEEK: Show aggregates data correctly across weeks
+    [TAB_6_WEEK, '2020-06-06', [
+      // week 2
+      {'@type': 'Run', 'date': '2020-04-28T09:00:00', run: {distance: 4}},
+      {'@type': 'Run', 'date': '2020-05-01T09:00:00', run: {distance: 9}},
+      // week 5
+      {'@type': 'Run', 'date': '2020-05-31T09:00:00', run: {distance: 3}},
+      // week 6
+      {'@type': 'Run', 'date': '2020-06-01T09:00:00', run: {distance: 5}},
+      {'@type': 'Run', 'date': '2020-06-07T09:00:00', run: {distance: 2}},
+    ], LABELS_APR_27_THRU_JUN_7, [13, 0, 0, 0, 3, 7]],
+
+    // TAB_6_WEEK: Show aggreates multiple events in given day
+    [TAB_6_WEEK, '2020-06-06', [
+      {'@type': 'Run', 'date': '2020-06-05T09:00:00', run: {distance: 1}},
+      {'@type': 'Run', 'date': '2020-06-05T09:00:00', run: {distance: 2}},
+      {'@type': 'Run', 'date': '2020-06-05T09:00:00', run: {distance: 3}},
+    ], LABELS_APR_27_THRU_JUN_7, [0, 0, 0, 0, 0, 6]],
 
     // TAB_7_DAY: Show summaries daily events correctly
     [TAB_7_DAY, '2020-06-06T12:00:00', [
