@@ -143,9 +143,9 @@ test('generateMomentsUntil for Month', () => {
     .map(e => e.format('YYYY-MM-DD'));
 
   const expected = [
-    "2018-12-01",
-    "2019-02-01",
-    "2019-04-01"
+    "2018-11-30",
+    "2019-01-31",
+    "2019-03-31"
   ];
   expect(expected).toEqual(moments);
 });
@@ -155,9 +155,9 @@ test('generateMomentsUntil for Year', () => {
     .map(e => e.format('YYYY-MM-DD'));
 
   const expected = [
-    "2014-01-01",
-    "2017-01-01",
-    "2020-01-01"
+    "2013-03-31",
+    "2016-03-31",
+    "2019-03-31"
   ];
   expect(expected).toEqual(moments);
 });

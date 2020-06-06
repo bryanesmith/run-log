@@ -102,12 +102,6 @@ export function addMoment(fromMoment: any, units: string, duration: number) {
 export function generateMomentsUntil(length: number, units: string, duration: number, endDate: any) {
   const dates = [];
 
-  // If not measuring days, the end should be the end of the calendar month
-  //   or year....
-  if (['Month', 'Year'].includes(units)) {
-    endDate = addMoment(endDate.startOf(units), units, 1);
-  }
-
   for (let i = length - 1; i >= 0; i--) {
     const date = subtractMoment(endDate, units, i * duration);
     dates.push(date);

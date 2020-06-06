@@ -17,14 +17,17 @@ import { filterEventsByEndDate, totalDistance } from 'run-log/scripts/utils/even
 /*
  * Generates data for bar chart.
  */
-function barChartData(events, xLabelFn, barOpts) {
+export function barChartData(selectedTab, events, date) {
+
+  const {xLabelFn, barOpts} = selectedTabBarChartParams(selectedTab);
+  const until = calculateFinalDate(date, selectedTab);
 
   // fetch the ending moment for every bar
   const dates = generateMomentsUntil(
     barOpts.count,
     barOpts.units,
     barOpts.length,
-    moment()
+    until
   );
 
   // Partition all run events into a bucket per bar
@@ -73,7 +76,7 @@ function barChartOptions() {
 /*
  * Given selected tabs, returns the parameters needed for barChartData.
  */
-function selectedTabBarChartParams(selectedTab) {
+export function selectedTabBarChartParams(selectedTab) {
   switch (selectedTab) {
     case TAB_7_DAY:
       return {
@@ -98,14 +101,27 @@ function selectedTabBarChartParams(selectedTab) {
   }
 }
 
+export function calculateFinalDate(date, selectedTab) {
+  switch (selectedTab) {
+    case TAB_7_DAY:
+      return date;
+    case TAB_30_DAY:
+      return date; // TODO: wrong; just remove 30d
+    case TAB_365_DAY:
+      return date.endOf('month');
+    case TAB_ALL:
+      return date.endOf('year');
+  }
+}
+
 /*
  * Renders a bar chart for 7d, 30d, 365d, or all-time.
  */
 export default props => {
-  const params = selectedTabBarChartParams(props.selectedTab);
+  const date = moment(); // want labels to be grounded on current time
   return (
     <ChartistGraph
-      data={barChartData(props.events, params.xLabelFn, params.barOpts)}
+      data={barChartData(props.selectedTab, props.events, date)}
       options={barChartOptions()}
       type={'Bar'}
     />
