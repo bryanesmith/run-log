@@ -30,19 +30,43 @@ export function barChartData(selectedTab, events, date) {
     until
   );
 
-  // Partition all run events into a bucket per bar
-  const runSeries = dates.map(endDate => {
+  const runSeries = getRunSeries(dates, events, barOpts);
+
+  const maxDistance = Math.max(...runSeries);
+
+  // We only want cross-training if on the TAB_7_DAY tab.
+  //   Additionally, only if there are cross-training sessions; otherwise,
+  //   doesn't look ass nice because the cross-training series messes w/
+  //   centering of run series.
+  const includeCrossTraining = [TAB_7_DAY].includes(selectedTab) &&
+    events.find(e => ['CrossTrain','Run+CrossTrain'].includes(e['@type']));
+
+  const crossTrainingSeries = includeCrossTraining ?
+    getCrossTrainingSeries(dates, events, barOpts, maxDistance) : [];
+
+  return {
+    labels: dates.map(xLabelFn),
+    series: includeCrossTraining ? [runSeries, crossTrainingSeries] : [runSeries],
+  };
+}
+
+/**
+ * Generates series of run events.
+ */
+function getRunSeries(dates, events, barOpts) {
+  return dates.map(endDate => {
     const runs = events.filter(e => ['Run','Run+CrossTrain'].includes(e['@type']));
     const filtered = filterEventsByEndDate(runs, endDate, barOpts.units, barOpts.length);
     return totalDistance(filtered);
   });
+}
 
-  // Find maximum run distance
-  const maxDistance = Math.max(...runSeries);
-
-  // Partition all cross-training events into a bucket per bar
-  //   Note that the height of these bars will always be half of maximum run height
-  const crossTrainingSeries = dates.map(endDate => {
+/**
+ * Generates series of cross-training events.
+ *   Note that the height of these bars will always be half of maximum run height.
+ */
+function getCrossTrainingSeries(dates, events, barOpts, maxDistance) {
+  return dates.map(endDate => {
     const crossTrains = events.filter(e => ['CrossTrain','Run+CrossTrain'].includes(e['@type']));
     const filtered = filterEventsByEndDate(crossTrains, endDate, barOpts.units, barOpts.length);
 
@@ -53,11 +77,6 @@ export function barChartData(selectedTab, events, date) {
       return null; // No activity
     }
   });
-
-  return {
-    labels: dates.map(xLabelFn),
-    series: [runSeries, crossTrainingSeries],
-  };
 }
 
 /*
