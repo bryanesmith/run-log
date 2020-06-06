@@ -7,7 +7,6 @@ import moment from 'moment';
 
 import {
   TAB_7_DAY,
-  TAB_30_DAY,
   TAB_365_DAY,
   TAB_ALL,
 } from 'run-log/components/dashboard/actions';
@@ -102,11 +101,6 @@ export function selectedTabBarChartParams(selectedTab) {
         barOpts: { count: 7, units: 'Day', length: 1 },
         xLabelFn: m => m.format('dd'),
       };
-    case TAB_30_DAY:
-      return {
-        barOpts: { count: 10, units: 'Day', length: 3 },
-        xLabelFn: m => m.format('MM/DD'),
-      };
     case TAB_365_DAY:
       return {
         barOpts: { count: 12, units: 'Month', length: 1 },
@@ -124,8 +118,6 @@ export function calculateFinalDate(date, selectedTab) {
   switch (selectedTab) {
     case TAB_7_DAY:
       return date;
-    case TAB_30_DAY:
-      return date; // TODO: wrong; just remove 30d
     case TAB_365_DAY:
       return date.endOf('month');
     case TAB_ALL:
